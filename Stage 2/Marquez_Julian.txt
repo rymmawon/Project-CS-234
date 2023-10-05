@@ -1,0 +1,15 @@
+﻿[Services]
+- pool: String
+- gym: String
+- roomService: String
+- airConditioning: String
+- freeWifi: String
+- freeParking: String
+
+
+pool could be "Outdoor pool with varying depths."
+The gym could be a "Fully equipped fitness center with cardio and strength training equipment."
+roomService could be "In-room dining service with a diverse menu."
+airConditioning could be "Individually controlled air conditioning in each room."
+freeWifi could be "Complimentary high-speed Wi-Fi access in all areas."
+freeParking could be "Free on-site parking for hotel guests.
