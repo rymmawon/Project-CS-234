@@ -1,51 +1,22 @@
-public class Guest {
-    private String firstName;
-    private String lastName;
-    private int age;
-    private String phoneNumber;
-    private String email;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+  
 
-    public Guest(String firstName, String lastName, int age) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.age = age;
-        phoneNumber = "";
-        email = "";
-    }
+class Guest {//another tester program 
+    private String name;
+    private String membership;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-    public String getFirstName() {
-        return firstName;
+    public Guest(String name, String membership) {
+        this.name = name;
+        this.membership = membership;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public String getMembership() {
+        return membership;
     }
-    public int getAge() {
-        return age;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getEmail() {
-        return email;
-    }
-
 }
