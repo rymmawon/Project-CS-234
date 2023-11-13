@@ -122,7 +122,7 @@ public class Menu {
         for(int i = 0; i < 5; i++) {
             Guest newGuest = new Guest(generateFirstName(), generateLastName(), generateRandomNumber(18, 100));
             guests.add(newGuest);
-            Invoice newInvoice = new Invoice(new Guest(),prices[generateRandomNumber(1, 4) - 1], generateRandomNumber(1, 4));
+            Invoice newInvoice = new Invoice(newGuest, prices[generateRandomNumber(1, 4) - 1], generateRandomNumber(1, 21));
             invoices.add(newInvoice);
         }
     }
@@ -849,7 +849,7 @@ public class Menu {
     }
     public void option6_3() throws ParseException {
         Scanner in = new Scanner(System.in);
-        System.out.print("\t\tFirst Name\t\tLast Name\t\tAge\t\tHourly Wage\t\tHours Worked\t\tTotal Pay\n\n");
+        System.out.print("\t\tFirstName\t\tAge\t\tHourly Wage\t\tHours Worked\t\tTotal Pay\n\n");
         for (Employee employee : employees) {
             employee.printEmployeeInfo();
 
@@ -930,7 +930,7 @@ public class Menu {
         String firstName = in.nextLine();
         for (Invoice invoice : invoices) {
             if (Objects.equals(lastName, invoice.getCostumer().getLastName()) && Objects.equals(lastName, invoice.getCostumer().getFirstName())) {
-                System.out.print("\t\tFirst Name\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
+                System.out.print("\t\tFirstName\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
                 invoice.printInvoice();
                 exists = true;
             }
@@ -941,8 +941,8 @@ public class Menu {
         initialMenu();
     }
     public void option7_2() throws ParseException {
+        System.out.print("\t\tFirst Name\t\tLast Name\\tNights Stayed\t\tDiscount\t\tTotal \n\n");
         for (Invoice invoice : invoices) {
-            System.out.print("\t\tFirst Name\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
                 invoice.printInvoice();
         }
         initialMenu();

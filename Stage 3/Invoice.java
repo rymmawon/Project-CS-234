@@ -17,6 +17,10 @@ class Invoice {
         calculateTotal();
     }
 
+    public void setDiscount(double roomPrice) {
+        this.roomPrice = roomPrice;
+        calculateTotal();
+    }
     public void setCostumer(Guest costumer) {
         this.costumer = costumer;
     }
@@ -25,10 +29,9 @@ class Invoice {
         return costumer;
     }
 
-    public double calculateTotal() {
+    public void calculateTotal() {
         double totalPrice = (roomPrice * nightsStayed);
         totalPrice = totalPrice + totalPrice * discount;
-        return totalPrice;
     }
 
     public void printInvoice() {
@@ -41,7 +44,7 @@ class Invoice {
         System.out.print("|" + "\t");
         System.out.printf("%-20s", (discount * 100) + "%");
         System.out.print("|" + "\t");
-        System.out.printf("%-20s", "%" + totalPrice);
+        System.out.printf("%-20s", totalPrice);
         System.out.print("|\n");
     }
 }

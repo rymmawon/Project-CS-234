@@ -101,7 +101,7 @@ public class Employee {
 
     public void printEmployeeInfo() {
         System.out.print("|" + "\t");
-        System.out.printf("%-20s", employeeFirstName + employeeLastName);
+        System.out.printf("%-20s", employeeFirstName +" " + employeeLastName);
         System.out.print("|" + "\t");
         System.out.printf("%-20s", employeeAge);
         System.out.print("|" + "\t");
