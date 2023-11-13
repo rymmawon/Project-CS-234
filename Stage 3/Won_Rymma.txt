@@ -1,1 +1,4 @@
-
+Created Menu.java
+Added Attributes and Methods for Reservation, Guest, Room, Reporst, Employee, Membership classes
+Updated UML diagram
+Debaging Code
