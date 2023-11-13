@@ -1,0 +1,14 @@
+﻿Menu Class
+The "Menu" class serves as the control hub for a hotel management system. It provides functionalities for both employees and guests. Employees can check in, entering details like hours worked and generating unique IDs. Guests can check in, either using a membership ID or purchasing a new membership, calculating room costs. The system also offers a checkout option. Its intuitive design makes it a simple yet effective tool for managing various hotel operations.
+
+
+Reservation Class
+This class is dedicated to handling hotel reservations. It stores crucial details such as check-in and check-out dates, the number of people in a room, and specific room preferences. It boasts a method that efficiently calculates the number of nights stayed, using Java's LocalDate functionality. Additionally, it handles the check-in process by prompting users for relevant information and preferences.
+
+
+Invoice Class
+The "Invoice" class takes charge of fee calculations for guests' stays. It provides methods to calculate both the regular total and the discounted total fees. To ensure accuracy, it includes logic that prevents the total fee from falling below zero, maintaining a coherent fee structure for guests.
+
+
+Guest Class
+The "Guest" class stores essential information about individual guests, primarily their names and membership status. It acts as a repository for guest-related data, enabling the system to handle and distinguish between different guests' needs and privileges.
