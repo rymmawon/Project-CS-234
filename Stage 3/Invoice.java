@@ -5,13 +5,6 @@ class Invoice {
     private double discount;
     private double totalPrice;
 
-    private void setCostumer(Guest costumer) {
-        this.costumer = costumer;
-    }
-
-    public Guest getCostumer() {
-        return costumer;
-    }
     public Invoice(Guest costumer, double roomPrice, int nightsStayed) {
         this.costumer = costumer;
         this.roomPrice = roomPrice;
@@ -22,6 +15,14 @@ class Invoice {
             discount = 0;
         }
         calculateTotal();
+    }
+
+    public void setCostumer(Guest costumer) {
+        this.costumer = costumer;
+    }
+
+    public Guest getCostumer() {
+        return costumer;
     }
 
     public double calculateTotal() {

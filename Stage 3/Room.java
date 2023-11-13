@@ -1,8 +1,5 @@
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Scanner;
+import java.util.*;
 
 class Room {
 
@@ -44,9 +41,9 @@ class Room {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the bed size Queen or King: ");
         bedSize = in.nextLine();
-        while(bedSize != "Queen" || bedSize != "King") {
-            System.out.print("Enter the bed size Queen or King: ");
+        while(!Objects.equals(bedSize, "Queen") && !Objects.equals(bedSize, "King")) {
             System.out.println("Wrong Bed type. Try again. ");
+            System.out.print("Enter the bed size Queen or King: ");
             bedSize = in.nextLine();
         }
     }
@@ -59,7 +56,7 @@ class Room {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the bed number (1 or 2): ");
         bedNumber = in.nextInt();
-        while (bedNumber != 1 || bedNumber != 2) {
+        while (bedNumber != 1 && bedNumber != 2) {
             System.out.println("Error! try again");
             System.out.print("Enter the bed number (1 or 2): ");
             bedNumber = in.nextInt();
@@ -68,9 +65,9 @@ class Room {
 
     // Setter for maxGuests
     public void setMaxGuests() {
-        if(bedSize == "Queen" && bedNumber == 1) {
+        if(Objects.equals(bedSize, "Queen") && bedNumber == 1) {
             maxGuests = 2;
-        }else if(bedSize == "King" && bedNumber == 1) {
+        }else if(Objects.equals(bedSize, "King") && bedNumber == 1) {
             maxGuests = 3;
         } else if (bedNumber == 2) {
             maxGuests = 4;
@@ -86,13 +83,13 @@ class Room {
 
     // Setter for roomPrice
     public void setRoomPrice() {
-        if(bedSize == "Queen" && bedNumber == 1) {
+        if(Objects.equals(bedSize, "Queen") && bedNumber == 1) {
             roomPrice = 50.00;
-        }else if(bedSize == "Queen" && bedNumber == 2) {
+        }else if(Objects.equals(bedSize, "Queen") && bedNumber == 2) {
             roomPrice = 65.00;
-        } else if (bedSize == "King" && bedNumber == 1) {
+        } else if (Objects.equals(bedSize, "King") && bedNumber == 1) {
             roomPrice = 80.00;
-        } else if (bedSize == "King" && bedNumber == 1) {
+        } else if (Objects.equals(bedSize, "King") && bedNumber == 2) {
             roomPrice = 95.00;
         } else {
             roomPrice = 0;

@@ -57,19 +57,12 @@ public class Reservation {
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
         System.out.print("Enter check-out Date in MM-dd-yyyy: ");
         String checkOut = in.nextLine();
-        checkInDate = formatter.parse(checkOut);
-        while (checkOutDate == null || (checkInDate.before(new Date()) ||!(checkOutDate.after(checkInDate)))) {
-            if(checkInDate.before(new Date())) {
-                System.out.println("Check out Date cannot be in the past. Try again.");
-            } else if (!(checkOutDate.after(checkInDate))) {
-                System.out.println("Check out Date cannot be before the check in Date. Try again.");
-            } else {
-                System.out.println("Error!. Try again.");
-            }
+        checkOutDate= formatter.parse(checkOut);
+        while (checkOutDate == null) {
             System.out.println("Enter check-out Date in MM-dd-yyyy: ");
             System.out.print("Enter check-out Date in MM-dd-yyyy: ");
             checkOut = in.nextLine();
-            checkInDate = formatter.parse(checkOut);
+            checkOutDate = formatter.parse(checkOut);
 
         }
         calculateNights();
@@ -150,10 +143,7 @@ public class Reservation {
         System.out.print("Enter check-in Date in MM-dd-yyyy: ");
         String checkIn = in.nextLine();
         checkInDate = formatter.parse(checkIn);
-        while (checkInDate == null || (checkInDate.after(checkOutDate))) {
-            if(checkInDate.after(checkOutDate)) {
-                System.out.println("Check in Date cannot be after Check out day. Try again.");
-            }
+        while (checkInDate == null) {
             System.out.print("Enter check-in Date in MM-dd-yyyy: ");
             checkIn = in.nextLine();
             checkInDate = formatter.parse(checkIn);
@@ -165,9 +155,9 @@ public class Reservation {
         System.out.print("|" + "\t");
         System.out.printf("%-20s", customer.getFirstName() + " " + customer.getLastName());
         System.out.print("|" + "\t");
-        System.out.printf("%-20s", checkInDate);
+        System.out.printf("%-20s", formatter.format(checkInDate));
         System.out.print("|" + "\t");
-        System.out.printf("%-20s", checkOutDate);
+        System.out.printf("%-20s", formatter.format(checkOutDate));
         System.out.print("|" + "\t");
         System.out.printf("%-20s", nights);
         System.out.print("|" + "\t");

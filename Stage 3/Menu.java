@@ -123,7 +123,7 @@ public class Menu {
             Guest newGuest = new Guest(generateFirstName(), generateLastName(), generateRandomNumber(18, 100));
             guests.add(newGuest);
             Invoice newInvoice = new Invoice(new Guest(),prices[generateRandomNumber(1, 4) - 1], generateRandomNumber(1, 4));
-
+            invoices.add(newInvoice);
         }
     }
     public void generateEmployees() {
@@ -133,7 +133,7 @@ public class Menu {
         }
 
     }
-    private int generateRandomNumber(int min, int max) {
+    public int generateRandomNumber(int min, int max) {
         return (int)((Math.random() * (max - min + 1)) + min);
     }
 
@@ -523,6 +523,7 @@ public class Menu {
         for(int i = 0; i < guests.size(); i++) {
             if(Objects.equals(lastName, guests.get(i).getLastName()) && Objects.equals(firstName, guests.get(i).getFirstName())) {
                 newReservation.setCustomer(guests.get(i));
+                break;
             } else {
                 Guest newGuest = new Guest();
                 newReservation.setCustomer(newGuest);
@@ -531,15 +532,16 @@ public class Menu {
                 newGuest.setAge();
                 newGuest.setPhoneNumber();
                 guests.add(newGuest);
+                break;
             }
         }
         newReservation.setNumPeople();
         for (Room room : rooms) {
-            if (newReservation.getNumPeople() >= room.getRoomNumber() && Objects.equals(room.getRoomStatus(), "Available")) {
+            if (newReservation.getNumPeople() >= room.getMaxGuests() && Objects.equals(room.getRoomStatus(), "Available")) {
                 newReservation.setBoard(room);
                 room.setRoomStatus("Reserved");
+                break;
             }
-            break;
         }
         reservations.add(newReservation);
         initialMenu();
@@ -550,8 +552,8 @@ public class Menu {
         System.out.print("Enter the Guest last name: ");
         String lastName = in.nextLine();
         if (containsName(guests, lastName)) {
-            System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\tRoom\t\tPeople\n\n");
-            for(int i = 0; i < guests.size(); i++) {
+            System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\t\tNights\t\tRoom\t\t\tPeople\n\n");
+            for(int i = 0; i < reservations.size(); i++) {
                 if(Objects.equals(lastName, reservations.get(i).getCustomer().getLastName())) {
                     reservations.get(i).printReservation();
                 }
@@ -567,7 +569,7 @@ public class Menu {
     }
 
     public void option1_3() throws ParseException {
-        System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\tRoom\t\tPeople\n\n");
+        System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\t\tRoom\t\t\tPeople\n\n");
         for (Reservation reservation : reservations) {
             reservation.printReservation();
         }
@@ -589,6 +591,7 @@ public class Menu {
                  System.out.println("9. Main Menu");
                  System.out.println("0. Exit");
                  System.out.print("Enter your choice: ");
+                 int option = in.nextInt();
                  switch (option) {
                      case 1:
                          reservation.setCheckInDate();
@@ -612,6 +615,8 @@ public class Menu {
                          System.out.println("Invalid option");
                          break;
                  }
+             }else {
+                 System.out.println("Reservation is not found.");
              }
          }
          initialMenu();
@@ -632,7 +637,7 @@ public class Menu {
     }
 
     public void option2_1() throws ParseException {
-        System.out.print("\t\tRoom \t\t Bed \t\t Maximum Guest \t\t Price \n\n");
+        System.out.print("\tRoom \t\t\t Bed \t\t\t Maximum Guest\t\t\t Price \n\n");
         for (Room room : rooms) {
             if (Objects.equals(room.getRoomStatus(), "Available")) {
                 room.printRoom();
@@ -646,17 +651,19 @@ public class Menu {
         int num = in.nextInt();
         for (Room room : rooms) {
             if (Objects.equals(room.getRoomNumber(), num)) {
-                System.out.print("Room " + room.getRoomNumber() + " is " + room.getRoomStatus());
+                System.out.println("Room " + room.getRoomNumber() + " is " + room.getRoomStatus());
             }
         }
         initialMenu();
     }
     public void option2_3() throws ParseException {
+        boolean exists = false;
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Room number: ");
         int num = in.nextInt();
         for (Room room : rooms) {
             if (Objects.equals(room.getRoomNumber(), num)) {
+                exists = true;
                 System.out.println("What would you like to edit? ");
                 System.out.println("1. Bed Size");
                 System.out.println("2. Bed Number");
@@ -665,6 +672,7 @@ public class Menu {
                 System.out.println("9. Main Menu");
                 System.out.println("0. Exit");
                 System.out.print("Enter your choice: ");
+                int option= in.nextInt();
                 switch (option) {
                     case 1:
                         room.setBedSize();
@@ -693,6 +701,9 @@ public class Menu {
             }
 
         }
+        if(!exists) {
+            System.out.println("The Room is not found");
+        }
         initialMenu();
     }
 
@@ -718,7 +729,7 @@ public class Menu {
         System.out.print("Enter the Guest last name: ");
         String lastName = in.nextLine();
         if (containsName(guests, lastName)) {
-            System.out.print("************ First Name **** Last Name **** Age **** Phone Number ****\n\n");
+            System.out.print("\t\tFirst Name \t\tLast Name \t\tAge\t\tPhone Number \n\n");
             for (Guest guest : guests) {
                 if (Objects.equals(lastName, guest.getLastName())) {
                     guest.printGuest();
@@ -730,7 +741,7 @@ public class Menu {
         initialMenu();
     }
     public void option3_3() throws ParseException {
-        System.out.print("************ First Name **** Last Name **** Age **** Phone Number ****\n\n");
+        System.out.print("\t\tFirst Name\t\tLast Name\t\tAge\t\tPhone Number\n\n");
         for (Guest guest : guests) {
             guest.printGuest();
         }
@@ -738,6 +749,7 @@ public class Menu {
     }
 
     public void option3_4() throws ParseException {
+        boolean exists = false;
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Guest last name: ");
         String lastName = in.nextLine();
@@ -745,6 +757,7 @@ public class Menu {
         String firstName = in.nextLine();
         for (Guest guest : guests) {
             if (Objects.equals(lastName, guest.getLastName()) && Objects.equals(firstName, guest.getFirstName())) {
+                exists = true;
                 System.out.println("What would you like to edit? ");
                 System.out.println("1. First Name");
                 System.out.println("2. Last Name");
@@ -753,6 +766,7 @@ public class Menu {
                 System.out.println("9. Main Menu");
                 System.out.println("0. Exit");
                 System.out.print("Enter your choice: ");
+                option = in.nextInt();
                 switch (option) {
                     case 1:
                         guest.setFirstName();
@@ -778,6 +792,10 @@ public class Menu {
 
                 }
             }
+
+        }
+        if(!exists) {
+            System.out.println("The Guest is not found");
         }
         initialMenu();
     }
@@ -822,7 +840,7 @@ public class Menu {
         System.out.print("Enter the Employee first name: ");
         String firstName = in.nextLine();
         for (Employee employee : employees) {
-            System.out.print("\t\tFirst Name\t\tLast Name\t\tAge\t\tHourly Wage\t\tHours Worked\t\tTotal Pay\n\n");
+            System.out.print("\t\tName\t\tAge\t\tHourly Wage\t\tHours Worked\t\tTotal Pay\n\n");
             if (Objects.equals(lastName, employee.getEmployeeLastName()) && Objects.equals(firstName, employee.getEmployeeFirstName())) {
                 employee.printEmployeeInfo();
             }
@@ -856,6 +874,7 @@ public class Menu {
                 System.out.println("9. Main Menu");
                 System.out.println("0. Exit");
                 System.out.print("Enter your choice: ");
+                option = in.nextInt();
                 switch (option) {
                     case 1:
                         employee.setEmployeeFirstName();
@@ -903,6 +922,7 @@ public class Menu {
     }
 
     public void option7_1() throws ParseException {
+        boolean exists = false;
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Guest last name: ");
         String lastName = in.nextLine();
@@ -912,7 +932,11 @@ public class Menu {
             if (Objects.equals(lastName, invoice.getCostumer().getLastName()) && Objects.equals(lastName, invoice.getCostumer().getFirstName())) {
                 System.out.print("\t\tFirst Name\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
                 invoice.printInvoice();
+                exists = true;
             }
+        }
+        if(!exists) {
+            System.out.println("Invoice is not found");
         }
         initialMenu();
     }
