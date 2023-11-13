@@ -1,6 +1,7 @@
+import java.util.Scanner;
+
 public class Employee {
     // Attributes
-    private int employeeID;
     private String employeeFirstName;
     private String employeeLastName;
     private int employeeAge;
@@ -8,15 +9,22 @@ public class Employee {
     private float hoursWorked;
     private float totalPay;
 
-    // Constructor
-    public Employee(int employeeID, String employeeFirstName, String employeeLastName, int employeeAge) {
-        this.employeeID = employeeID;
+    // Constructors
+    public Employee() {
+        employeeFirstName = "";
+        employeeLastName = "";
+        employeeAge = 0;
+        hourlyWage = 18.0f; //Starting pay for this hotel
+        hoursWorked = 8.0f;//Average work load
+        totalPay = getTotalPay();
+    }
+    public Employee(String employeeFirstName, String employeeLastName, int employeeAge) {
         this.employeeFirstName = employeeFirstName;
         this.employeeLastName = employeeLastName;
         this.employeeAge = employeeAge;
-        this.hourlyWage = 18.0f; //Starting pay for a thisd hotel
+        this.hourlyWage = 18.0f; //Starting pay for this hotel
         this.hoursWorked = 8.0f;//Average work load
-        this.totalPay = 0.0f;
+        this.totalPay = getTotalPay();
     }
 
     // Setter and Getter methods for employeeFirstName
@@ -62,6 +70,35 @@ public class Employee {
 
     public float getHoursWorked() {
         return hoursWorked;
+    }
+
+    public void createEmployee() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Employee first Name: ");
+        employeeFirstName = in.nextLine();
+        System.out.print("Enter the Employee last name: ");
+        employeeLastName = in.nextLine();
+        System.out.print("Enter the Employee age: ");
+        employeeAge = in.nextInt();
+        System.out.print("Enter the Employee hourly wage: ");
+        hourlyWage = in.nextFloat();
+        System.out.print("Enter the Employee hours worked: ");
+        hourlyWage = in.nextFloat();
+    }
+
+    public void printEmployeeInfo() {
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", employeeFirstName + " " + employeeLastName);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", employeeAge);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", hourlyWage);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", hoursWorked);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", totalPay);
+        System.out.print("|\n");
+
     }
 
     // Method to calculate and return total pay

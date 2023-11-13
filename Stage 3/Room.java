@@ -1,40 +1,38 @@
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 class Room {
 
     private int roomNumber;
-    private String roomType;
-    private String bedSize; 
+    private String bedSize;
+    private int bedNumber;
     private int maxGuests;
-    private int roomPrice;
+    private double roomPrice;
     private String roomStatus;
-    private String[] amenities;
 
     public Room() {
+        roomNumber = 0;
+        bedSize = "";
+        maxGuests = 0;
+        roomPrice = 0;
+        roomStatus = "";
     }
 
     // Parameterized constructor
-    public Room(int roomNumber, String roomType, String bedSize, int maxGuests) {
+    public Room(int roomNumber, String bedSize, int bedNumber) {
         this.roomNumber = roomNumber;
-        this.roomType = roomType;
         this.bedSize = bedSize;
-        this.maxGuests = maxGuests;
-        this.roomPrice = roomPrice; // Initialize roomPrice
+        this.bedNumber = bedNumber;
+        setMaxGuests();
+        setRoomPrice(); // Initialize roomPrice
         this.roomStatus = "Available"; // Initialize roomStatus to "Available"
-        this.amenities = new String[0]; // Initialize amenities as an empty array
     }
     
-
-    // Setter for roomType
-    public void setRoomType(String roomType) {
-        this.roomType = roomType;
-    }
-
-    // Getter for roomType
-    public String getRoomType(int roomNumber) {
-        return this.roomType;
+    public int getRoomNumber() {
+        return roomNumber;
     }
 
     // Setter for bedSize
@@ -42,14 +40,43 @@ class Room {
         this.bedSize = bedSize;
     }
 
+    public void setBedSize() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the bed size Queen or King: ");
+        bedSize = in.nextLine();
+        while(bedSize != "Queen" || bedSize != "King") {
+            System.out.print("Enter the bed size Queen or King: ");
+            System.out.println("Wrong Bed type. Try again. ");
+            bedSize = in.nextLine();
+        }
+    }
     // Getter for bedSize
     public String getBedSize(int roomNumber) {
         return this.bedSize;
     }
 
+    public void setBedNumber() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the bed number (1 or 2): ");
+        bedNumber = in.nextInt();
+        while (bedNumber != 1 || bedNumber != 2) {
+            System.out.println("Error! try again");
+            System.out.print("Enter the bed number (1 or 2): ");
+            bedNumber = in.nextInt();
+        }
+    }
+
     // Setter for maxGuests
-    public void setMaxGuests(int maxGuests) {
-        this.maxGuests = maxGuests;
+    public void setMaxGuests() {
+        if(bedSize == "Queen" && bedNumber == 1) {
+            maxGuests = 2;
+        }else if(bedSize == "King" && bedNumber == 1) {
+            maxGuests = 3;
+        } else if (bedNumber == 2) {
+            maxGuests = 4;
+        } else {
+            maxGuests = 0;
+        }
     }
 
     // Getter for maxGuests
@@ -58,12 +85,22 @@ class Room {
     }
 
     // Setter for roomPrice
-    public void setRoomPrice(int roomPrice) {
-        this.roomPrice = roomPrice;
+    public void setRoomPrice() {
+        if(bedSize == "Queen" && bedNumber == 1) {
+            roomPrice = 50.00;
+        }else if(bedSize == "Queen" && bedNumber == 2) {
+            roomPrice = 65.00;
+        } else if (bedSize == "King" && bedNumber == 1) {
+            roomPrice = 80.00;
+        } else if (bedSize == "King" && bedNumber == 1) {
+            roomPrice = 95.00;
+        } else {
+            roomPrice = 0;
+        }
     }
 
     // Getter for roomPrice
-    public int getRoomPrice() {
+    public double getRoomPrice() {
         return roomPrice;
     }
     // Setter for roomStatus
@@ -75,52 +112,33 @@ class Room {
     public String getRoomStatus() {
         return this.roomStatus;
     }
-    // Method to add amenities
-    public void addAmenities(int roomPrice,List<Guest> guests,int nights) {
-        Services hotelServices = new Services(guests);
-        Scanner scanner = new Scanner(System.in);
-    
-        while (true) {
-            System.out.print("Would you like a service?\n");
-            String choice = scanner.nextLine();
-            Services gettotal = new Services(guests);
-    
-            if (choice.equalsIgnoreCase("Yes")) {
-                hotelServices.displayAvailableServices();
-                System.out.print("Enter the service you want: ");
-                String userChoice = scanner.nextLine();
-        
-                if (userChoice.equalsIgnoreCase("Pool") || userChoice.equalsIgnoreCase("Gym")
-                        || userChoice.equalsIgnoreCase("Free Wifi") || userChoice.equalsIgnoreCase("Free Parking")) {
-                    System.out.println("\nYou chose " + userChoice + ", a default free service");
-        
-                    for (Guest guest : guests) {
-                        gettotal.addAllFees(0.0f, guest, roomPrice, scanner, nights);
-                    }
-                    break;
-                } else if (userChoice.equalsIgnoreCase("Room Service")) {
-                    System.out.println("You chose a paid service");
-                    gettotal.checkMembership(roomPrice, scanner,nights);
-                    break;
-                }
-            } else if (choice.equalsIgnoreCase("No")) {
-                System.out.println("Are you sure?");
-                String fschoice = scanner.nextLine();
-    
-                if (fschoice.equalsIgnoreCase("Yes")) {
-                    for (Guest guest : guests) {
-                        gettotal.addAllFees(0.0f, guest, roomPrice, scanner,nights);
-                    }
-                    break; // Exit the loop
-                }
-            } else {
-                System.out.print("No service selected.\n");
-                for (Guest guest : guests) {
-                    gettotal.addAllFees(0.0f, guest, roomPrice, scanner,nights);
-                }
-                break; // Exit the loop
-            }
-        }
+
+    public void modifyRoom() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the bed size: ");
+        bedSize = in.nextLine();
+        System.out.print("Enter the maximum guests:");
+        maxGuests = in.nextInt();
+        System.out.print("Enter the price per night ");
+        roomPrice = in.nextDouble();
     }
-        
+
+    public void printRoom() {
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s",roomNumber);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", bedSize);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", maxGuests);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", roomPrice);
+        System.out.print("|\n");
+    }
+
+
+    public void changeRoomPrice() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the price for the room in $: ");
+        roomPrice = in.nextDouble();
+    }
 }

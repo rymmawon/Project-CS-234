@@ -1,32 +1,46 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
 class Invoice {
-    private float fee;
-    private int nightsStayedfee;
-    private int discount = 25;
+    private Guest costumer;
+    private double roomPrice;
+    private int nightsStayed;
+    private double discount;
+    private double totalPrice;
 
-    public Invoice(float fee, int nightsStayedfee) {
-        this.fee = fee;
-        this.nightsStayedfee = nightsStayedfee;
+    private void setCostumer(Guest costumer) {
+        this.costumer = costumer;
     }
 
-    public float calculateTotal() {
-        float total = (fee + nightsStayedfee);
-        //*simple if method to make the sure method does  not return anything smaller then 0*/
-        if(total > 0){
-            return total;}
-            else{
-            return 0;}
+    public Guest getCostumer() {
+        return costumer;
+    }
+    public Invoice(Guest costumer, double roomPrice, int nightsStayed) {
+        this.costumer = costumer;
+        this.roomPrice = roomPrice;
+        this.nightsStayed = nightsStayed;
+        if(costumer instanceof Member) {
+            discount = ((Member) costumer).getDiscout();
+        } else {
+            discount = 0;
+        }
+        calculateTotal();
     }
 
-    public float calculatedisTotal() {
-        float total = (fee + nightsStayedfee) - discount;
-        //*simple if method to make the sure method does  not return anything smaller then 0*/
-        if(total > 0){
-        return total;}
-        else{
-        return 0;}
+    public double calculateTotal() {
+        double totalPrice = (roomPrice * nightsStayed);
+        totalPrice = totalPrice + totalPrice * discount;
+        return totalPrice;
+    }
+
+    public void printInvoice() {
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s",costumer.getFirstName());
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", costumer.getLastName());
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", nightsStayed);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", (discount * 100) + "%");
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", "%" + totalPrice);
+        System.out.print("|\n");
     }
 }
