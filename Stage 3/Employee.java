@@ -24,7 +24,7 @@ public class Employee {
         this.employeeAge = employeeAge;
         this.hourlyWage = 18.0f; //Starting pay for this hotel
         this.hoursWorked = 8.0f;//Average work load
-        this.totalPay = getTotalPay();
+        totalPay = getTotalPay();
     }
 
     // Setter and Getter methods for employeeFirstName

@@ -165,7 +165,9 @@ public class Reservation {
         System.out.print("|" + "\t");
         System.out.printf("%-20s", customer.getFirstName() + " " + customer.getLastName());
         System.out.print("|" + "\t");
-        System.out.printf("%-20s", formatter.format(checkInDate));
+        System.out.printf("%-20s", checkInDate);
+        System.out.print("|" + "\t");
+        System.out.printf("%-20s", checkOutDate);
         System.out.print("|" + "\t");
         System.out.printf("%-20s", nights);
         System.out.print("|" + "\t");
