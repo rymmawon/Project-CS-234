@@ -300,6 +300,7 @@ public class Menu {
         System.out.println("3. Show All Guests");
         System.out.println("4. Edit Guest Info");
         System.out.println("5. Delete Guest");
+        System.out.println("6. Get Membership");
         System.out.println("9. Main Menu");
         System.out.println("0. Exit");
         System.out.print("Enter your choice: ");
@@ -325,6 +326,9 @@ public class Menu {
             case 5:
                 option3_5();
                 break;
+            case 6:
+                option3_6();
+                break;
             case 9:
                 initialMenu();
                 break;
@@ -342,7 +346,6 @@ public class Menu {
 
         initialMenu();
     }
-
     public void option4() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Guest last name: ");
@@ -354,6 +357,7 @@ public class Menu {
                 reservation.setCheckInDate(new Date());
                 reservation.getBoard().setRoomStatus("Reserved");
             }
+            break;
         }
         initialMenu();
     }
@@ -367,7 +371,9 @@ public class Menu {
                 reservation.setCheckOutDate(new Date());
                 reservation.getBoard().setRoomStatus("Available");
                 Invoice newInvoice = new Invoice(reservation.getCustomer(), reservation.getBoard().getRoomPrice(), reservation.getNights());
+                invoices.add(newInvoice);
             }
+            break;
         }
         initialMenu();
     }
@@ -789,47 +795,99 @@ public class Menu {
         }
         initialMenu();
     }
-
-    public void option6_1() {
-        Employee newEmployees = new Employee();
-        newEmployees.createEmployee();
+    public void option3_6() throws ParseException {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Guest last name: ");
+        String lastName = in.nextLine();
+        System.out.print("Enter the Guest first name: ");
+        String firstName = in.nextLine();
+        for (Guest guest : guests) {
+            if (Objects.equals(lastName, guest.getLastName()) && Objects.equals(firstName, guest.getFirstName())) {
+                Member newMember = new Member(guest.getFirstName(), guest.getLastName(), guest.getAge());
+                members.add(newMember);
+            }
+        }
+        initialMenu();
     }
 
-    public void option6_2() {
+    public void option6_1() throws ParseException {
+        Employee newEmployees = new Employee();
+        newEmployees.createEmployee();
+        initialMenu();
+    }
+    public void option6_2() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Employee last name: ");
         String lastName = in.nextLine();
         System.out.print("Enter the Employee first name: ");
         String firstName = in.nextLine();
-        System.out.print("************ First Name **** Last Name **** Age **** Hourly Wage **** Hours Worked **** Total Pay ****\n\n");
-        for(int i = 0; i < employees.size(); i++) {
-            if(Objects.equals(lastName, employees.get(i).getEmployeeLastName()) && Objects.equals(firstName, employees.get(i).getEmployeeFirstName())) {
-                employees.get(i).printEmployeeInfo();
+        for (Employee employee : employees) {
+            System.out.print("\t\tFirst Name\t\tLast Name\t\tAge\t\tHourly Wage\t\tHours Worked\t\tTotal Pay\n\n");
+            if (Objects.equals(lastName, employee.getEmployeeLastName()) && Objects.equals(firstName, employee.getEmployeeFirstName())) {
+                employee.printEmployeeInfo();
             }
         }
+        initialMenu();
     }
-    public void option6_3() {
+    public void option6_3() throws ParseException {
         Scanner in = new Scanner(System.in);
-        System.out.print("************ First Name **** Last Name **** Age **** Hourly Wage **** Hours Worked **** Total Pay ****\n\n");
-        for(int i = 0; i < employees.size(); i++) {
-            employees.get(i).printEmployeeInfo();
+        System.out.print("\t\tFirst Name\t\tLast Name\t\tAge\t\tHourly Wage\t\tHours Worked\t\tTotal Pay\n\n");
+        for (Employee employee : employees) {
+            employee.printEmployeeInfo();
 
         }
+        initialMenu();
     }
-    public  void  option6_4(){
+    public  void  option6_4() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Employee last name: ");
         String lastName = in.nextLine();
         System.out.print("Enter the Employee first name: ");
         String firstName = in.nextLine();
         System.out.println("Enter the Employee new information: ");
-        for(int i = 0; i < employees.size(); i++) {
-            if(Objects.equals(lastName, employees.get(i).getEmployeeLastName()) && Objects.equals(firstName, employees.get(i).getEmployeeFirstName())) {
-                employees.get(i).createEmployee();
+        for (Employee employee : employees) {
+            if (Objects.equals(lastName, employee.getEmployeeLastName()) && Objects.equals(firstName, employee.getEmployeeFirstName())) {
+                System.out.println("What would you like to edit? ");
+                System.out.println("1. First Name");
+                System.out.println("2. Last Name");
+                System.out.println("3. Age");
+                System.out.println("4. Hourly Wage");
+                System.out.println("5. Hours Worked");
+                System.out.println("9. Main Menu");
+                System.out.println("0. Exit");
+                System.out.print("Enter your choice: ");
+                switch (option) {
+                    case 1:
+                        employee.setEmployeeFirstName();
+                        break;
+                    case 2:
+                        employee.setEmployeeLastName();
+                        break;
+                    case 3:
+                        employee.setAge();
+                        break;
+                    case 4:
+                        employee.setHourlyWage();
+                        break;
+                    case 5:
+                        employee.setHoursWorked();
+                        break;
+                    case 9:
+                        initialMenu();
+                        break;
+                    case 0:
+                        System.out.println("Bye");
+                        break;
+                    default:
+                        System.out.println("Invalid option");
+                        break;
+
+                }
             }
         }
+        initialMenu();
     }
-    public void option6_5() {
+    public void option6_5() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Employee last name: ");
         String lastName = in.nextLine();
@@ -841,9 +899,10 @@ public class Menu {
                 employees.remove(i);
             }
         }
+        initialMenu();
     }
 
-    public void option7_1() {
+    public void option7_1() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Guest last name: ");
         String lastName = in.nextLine();
@@ -851,13 +910,17 @@ public class Menu {
         String firstName = in.nextLine();
         for (Invoice invoice : invoices) {
             if (Objects.equals(lastName, invoice.getCostumer().getLastName()) && Objects.equals(lastName, invoice.getCostumer().getFirstName())) {
+                System.out.print("\t\tFirst Name\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
                 invoice.printInvoice();
             }
         }
+        initialMenu();
     }
-    public void option7_2() {
+    public void option7_2() throws ParseException {
         for (Invoice invoice : invoices) {
+            System.out.print("\t\tFirst Name\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
                 invoice.printInvoice();
         }
+        initialMenu();
     }
 }

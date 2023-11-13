@@ -37,8 +37,15 @@ public class Employee {
     }
 
     // Setter and Getter methods for employeeLastName
-    public void setEmployeeLastName(String employeeLastName) {
-        this.employeeLastName = employeeLastName;
+    public void setEmployeeLastName() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Employee last name: ");
+        employeeLastName = in.nextLine();
+    }
+    public void setEmployeeFirstName() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Employee first Name: ");
+        employeeFirstName = in.nextLine();
     }
 
     public String getEmployeeLastName() {
@@ -46,8 +53,10 @@ public class Employee {
     }
 
     // Setter and Getter methods for employeeAge
-    public void setAge(int employeeAge) {
-        this.employeeAge = employeeAge;
+    public void setAge() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Employee age: ");
+        employeeAge = in.nextInt();
     }
 
     public int getAge() {
@@ -55,8 +64,10 @@ public class Employee {
     }
 
     // Setter and Getter methods for hourlyWage
-    public void setHourlyWage(float hourlyWage) {
-        this.hourlyWage = hourlyWage;
+    public void setHourlyWage() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Employee hourly wage: ");
+        hourlyWage = in.nextFloat();
     }
 
     public float getHourlyWage() {
@@ -64,8 +75,10 @@ public class Employee {
     }
 
     // Method to add hours worked
-    public void addHoursWorked(float hoursWorked) {
-        this.hoursWorked += hoursWorked;
+    public void setHoursWorked() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter the Employee hours worked: ");
+        hourlyWage = in.nextFloat();
     }
 
     public float getHoursWorked() {
