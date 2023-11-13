@@ -708,7 +708,7 @@ public class Menu {
     }
 
     public void option2_4() throws ParseException {
-        System.out.print("\t\t Room \t\t Bed \t\t Maximum Guest \t\tPrice ****\n\n");
+        System.out.print("\t\t Room \t\t Bed Size \t\tBed Number \t\tMaximum Guest \t\tPrice ****\n\n");
         for (Room room : rooms) {
             room.printRoom();
         }

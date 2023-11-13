@@ -126,6 +126,8 @@ class Room {
         System.out.print("|" + "\t");
         System.out.printf("%-20s", bedSize);
         System.out.print("|" + "\t");
+        System.out.printf("%-20s", bedNumber);
+        System.out.print("|" + "\t");
         System.out.printf("%-20s", maxGuests);
         System.out.print("|" + "\t");
         System.out.printf("%-20s", roomPrice);
