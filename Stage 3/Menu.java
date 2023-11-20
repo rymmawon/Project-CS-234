@@ -2,8 +2,15 @@ import java.text.ParseException;
 import java.util.*;
 import java.lang.Math;
 import java.text.SimpleDateFormat;
+import javax.swing.*; // For GUI components
+import java.awt.*; // For layout managers and basic GUI functionalities
+import javax.swing.border.EmptyBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Menu {
+
+
+public class Menu extends JFrame {
     private int option;
     private ArrayList<Reservation> reservations;
     private ArrayList<Guest> guests;
@@ -11,6 +18,9 @@ public class Menu {
     private ArrayList<Room> rooms;
     private ArrayList<Invoice> invoices;
     private ArrayList<Employee> employees;
+    private JTextArea textArea;
+    private JPanel panel;
+    private JFrame frame;
 
     public Menu() {
         reservations = new ArrayList<>();
@@ -138,415 +148,708 @@ public class Menu {
     }
 
     public void initialMenu() throws ParseException {
-        Scanner in = new Scanner(System.in);
+        
+        frame = new JFrame("Hotel Menu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1400, 800);
+        frame.setVisible(true);
 
-        System.out.println("Menu:");
-        System.out.println("1. Reservations");
-        System.out.println("2. Rooms");
-        System.out.println("3. Guests");
-        System.out.println("4. Check In");
-        System.out.println("5. Check Out");
-        System.out.println("6. Employees");
-        System.out.println("7. Invoices");
-        System.out.println("8. Reports");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
+        panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
+        // Create buttons for each menu option
+        JButton reservationsButton = new JButton("Reservations");
+        JButton roomsButton = new JButton("Rooms");
+        JButton guestsButton = new JButton("Guests");
+        JButton checkInButton = new JButton("Check In");
+        JButton checkOutButton = new JButton("Check Out");
+        JButton employeesButton = new JButton("Employees");
+        JButton invoicesButton = new JButton("Invoices");
+        JButton reportsButton = new JButton("Reports");
+        JButton exitButton = new JButton("Exit");
 
-        switch (option) {
-            case 1:
-                option1();
-                break;
-            case 2:
-                option2();
-                break;
-            case 3:
-                option3();
-                break;
-            case 4:
-                option4();
-                break;
-            case 5:
-                option5();
-                break;
-            case 6:
-                option6();
-                break;
-            case 7:
-                option7();
-                break;
-            case 8:
-                option8();
-                break;
-            case 0:
-                System.out.println("Bye");
-                System.exit(0);
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
+        // Add buttons to the panel
+        for (JButton button : Arrays.asList(//loop to size all buttons the same size mor efficentlly
+                reservationsButton, roomsButton, guestsButton, checkInButton,
+                checkOutButton, employeesButton, invoicesButton, reportsButton, exitButton)) {
+            button.setBorder(new EmptyBorder(10, 10, 10, 20));
+            button.setPreferredSize(new Dimension(750,250));
+            panel.add(button);
         }
-        System.out.println("~".repeat(18));
-        initialMenu();
+
+        // Add the panel to the frame
+        frame.add(panel);
+        frame.revalidate(); // Update the layout
+        frame.repaint(); 
+
+        
+        reservationsButton.addActionListener(e -> {
+            try {
+                option1();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        roomsButton.addActionListener(e -> option2());
+
+        guestsButton.addActionListener(e -> {
+            try {
+                option3();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        checkInButton.addActionListener(e -> {
+            try {
+                option4();
+            } catch (ParseException p) {
+                p.printStackTrace();
+            }
+        });
+
+        checkOutButton.addActionListener(e -> {
+            try {
+                option5();
+            } catch (ParseException p) {
+                p.printStackTrace();
+            }
+        });
+
+        employeesButton.addActionListener(e -> {
+                option6();
+           
+        });
+
+        invoicesButton.addActionListener(e -> {
+                option7();
+          
+        });
+
+        reportsButton.addActionListener(e -> {
+                option8();
+        });
+
+        exitButton.addActionListener(e -> System.exit(0));
     }
 
     public void option1() throws ParseException {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("Menu:");
-        System.out.println("1. Add Reservation");
-        System.out.println("2. Search Reservation");
-        System.out.println("3. Show All Reservations");
-        System.out.println("4. Edit Reservation");
-        System.out.println("5. Cancel Reservation");
-        System.out.println("9. Main Menu");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
-
-        // Get the user input for the option
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
-
-        // Call the respective option
-        switch (option) {
-            case 1:
+        // Remove existing buttons
+        panel.removeAll();
+    
+        // Create new buttons for the current context
+        JButton mainMenuButton = new JButton("Main Menu");
+        JButton exitButton = new JButton("Exit");
+    
+        // Create an array of button labels(more efficent this way)
+        String[] buttonLabels = {"Add Reservation", "Search Reservation", "Show All Reservations"};
+    
+        // Create an array to store the buttons
+        JButton[] buttons = new JButton[buttonLabels.length];
+    
+        // Set preferred size for each button
+        Dimension buttonSize = new Dimension(1000, 333);//size for new buttons
+    
+        // Create buttons in a loop for the same size
+        for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setPreferredSize(buttonSize);
+            panel.add(buttons[i]);
+        }
+    
+        // Add action listeners for each button
+        buttons[0].addActionListener(e -> {
+            try {
                 option1_1();
-                break;
-            case 2:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                
+            }
+        });
+    
+        buttons[1].addActionListener(e -> {
+            try {
                 option1_2();
-                break;
-            case 3:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option1_2
+            }
+        });
+    
+        buttons[2].addActionListener(e -> {
+            try {
                 option1_3();
-                break;
-            case 4:
-                option1_4();
-                break;
-            case 5:
-                option1_5();
-                break;
-            case 9:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option1_3
+            }
+        });
+    
+        mainMenuButton.setPreferredSize(buttonSize);
+        mainMenuButton.addActionListener(e -> {
+            try {
                 initialMenu();
-                break;
-            case 0:
-                System.out.println("Bye");
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
-        }
-        System.out.println("~".repeat(18));
-        if (option == 0) {
+            } catch (ParseException p) {
+                p.printStackTrace();
+                // Handle the ParseException for initialMenu
+            }
+        });
+    
+        exitButton.setPreferredSize(buttonSize);
+        exitButton.addActionListener(e -> {
+            System.out.println("Bye");
             System.exit(0);
+        });
+    
+        // Add new buttons to the panel
+        panel.add(mainMenuButton);
+        panel.add(exitButton);
+    
+        // Update the layout and repaint the UI
+        frame.revalidate();
+        frame.repaint();
+    }      
+    
+    public void option2() {
+        panel.removeAll(); // Clear the existing panel
+
+        String[] buttonLabels = {"Check Available Rooms","Check Room Status","Modify Room","Show All Rooms","Main Menu","Exit"};
+
+        JButton[] buttons = new JButton[buttonLabels.length];
+
+        Dimension buttonSize = new Dimension(1000, 333);//size for new buttons
+    
+        // Create buttons in a loop for the same size
+        for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setPreferredSize(buttonSize);
+            panel.add(buttons[i]);
         }
-        initialMenu();
+    
+        frame.revalidate(); // Update the layout
+        frame.repaint();    // Repaint the UI
 
-    }
-
-    public void option2() throws ParseException {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("Menu:");
-        System.out.println("1. Check Available Rooms");
-        System.out.println("2. Check Room Status");
-        System.out.println("3. Modify Room");
-        System.out.println("4. Show All Rooms");
-        System.out.println("9. Main Menu");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
-
-        // Get the user input for the option
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
-
-        // Call the respective option
-        switch (option) {
-            case 1:
+        buttons[0].addActionListener(e -> {
+            try {
                 option2_1();
-                break;
-            case 2:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                
+            }
+        });
+    
+        buttons[1].addActionListener(e -> {
+            try {
                 option2_2();
-                break;
-            case 3:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option1_2
+            }
+        });
+    
+        buttons[2].addActionListener(e -> {
+            try {
                 option2_3();
-                break;
-            case 4:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option1_3
+            }
+        });
+
+        buttons[3].addActionListener(e -> {
+            try {
                 option2_4();
-                break;
-            case 9:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                
+            }
+        });
+    
+        buttons[4].addActionListener(e -> {
+            try {
                 initialMenu();
-                break;
-            case 0:
-                System.out.println("Bye");
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
-        }
-        System.out.println("~".repeat(18));
-        if (option == 0) {
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option1_2
+            }
+        });
+    
+        buttons[5].addActionListener(e -> {
             System.exit(0);
-        }
-        initialMenu();
-    }
+        });
+    }    
 
     public void option3() throws ParseException {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("Menu:");
-        System.out.println("1. Add Guest");
-        System.out.println("2. Search Guest");
-        System.out.println("3. Show All Guests");
-        System.out.println("4. Edit Guest Info");
-        System.out.println("5. Delete Guest");
-        System.out.println("6. Get Membership");
-        System.out.println("9. Main Menu");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
-
-        // Get the user input for the option
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
-
-        // Call the respective option
-        switch (option) {
-            case 1:
+        panel.removeAll();
+    
+        //An array of button labels
+        String[] buttonLabels = {"Add Guest", "Search Guest", "Show All Guests", "Edit Guest Info", "Delete Guest", "Get Membership", "Main Menu", "Exit"};
+    
+        // An array to store the buttons
+        JButton[] buttons = new JButton[buttonLabels.length];
+    
+        // Size for each button
+        Dimension buttonSize = new Dimension(750, 333); // size for new buttons
+    
+        // Create buttons in a loop
+        for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setPreferredSize(buttonSize);
+            panel.add(buttons[i]);
+        }
+    
+        // Add action listeners for each button
+        buttons[0].addActionListener(e -> {
+            try {
                 option3_1();
-                break;
-            case 2:
-                option3_2();
-                break;
-            case 3:
-                option3_3();
-                break;
-            case 4:
-                option3_4();
-                break;
-            case 5:
-                option3_5();
-                break;
-            case 6:
-                option3_6();
-                break;
-            case 9:
-                initialMenu();
-                break;
-            case 0:
-                System.out.println("Bye");
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
-        }
-        System.out.println("~".repeat(18));
-        if (option == 0) {
-            System.exit(0);
-        }
-
-        initialMenu();
-    }
-    public void option4() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Guest first name: ");
-        String firstName = in.nextLine();
-        for (Reservation reservation : reservations) {
-            if (Objects.equals(lastName, reservation.getCustomer().getLastName()) && Objects.equals(firstName, reservation.getCustomer().getFirstName())) {
-                reservation.setCheckInDate(new Date());
-                reservation.getBoard().setRoomStatus("Reserved");
+            } catch (ParseException ex) {
+                ex.printStackTrace();
             }
-            break;
+        });
+    
+        buttons[1].addActionListener(e -> {
+            try {
+                option3_2();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option3_2
+            }
+        });
+    
+        buttons[2].addActionListener(e -> {
+            try {
+                option3_3();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option3_3
+            }
+        });
+    
+        buttons[3].addActionListener(e -> {
+            try {
+                option3_4();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option3_4
+            }
+        });
+    
+        buttons[4].addActionListener(e -> {
+            try {
+                option3_5();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option3_5
+            }
+        });
+    
+        buttons[5].addActionListener(e -> {
+            try {
+                option3_6();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option3_6
+            }
+        });
+    
+        buttons[6].addActionListener(e -> {
+            try {
+                initialMenu();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+    
+        buttons[7].addActionListener(e -> {
+            System.out.println("Bye");
+            System.exit(0);
+        });
+    
+        // Update the layout and repaint the UI
+        frame.revalidate();
+        frame.repaint();
+    }
+    
+       
+    public void option4() throws ParseException {
+        panel.removeAll();
+
+        JTextField lastNameField = new JTextField(20);
+        JTextField firstNameField = new JTextField(20);
+        JButton submitButton = new JButton("Submit");
+        
+        panel.add(new JLabel("Enter the Guest last name: "));
+        panel.add(lastNameField);
+        panel.add(new JLabel("Enter the Guest first name: "));
+        panel.add(firstNameField);
+        panel.add(submitButton);
+        
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //establish textboxes for there questions 
+                String lastName = lastNameField.getText();//receive strings from the user
+                String firstName = firstNameField.getText();
+        
+                for (Reservation reservation : reservations) {
+                    if (Objects.equals(lastName, reservation.getCustomer().getLastName()) && Objects.equals(firstName, reservation.getCustomer().getFirstName())) {
+                        reservation.setCheckInDate(new Date());
+                        reservation.getBoard().setRoomStatus("Reserved");
+                        break; 
+                    }
+                }
+        try {
+            initialMenu();
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
-        initialMenu();
+                }
+            });
+            panel.revalidate();
+            panel.repaint();
     }
 
     public void option5() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Room number: ");
-        int num = in.nextInt();
-        for (Reservation reservation : reservations) {
-            if (Objects.equals(num, reservation.getBoard().getRoomNumber())) {
-                reservation.setCheckOutDate(new Date());
-                reservation.getBoard().setRoomStatus("Available");
-                Invoice newInvoice = new Invoice(reservation.getCustomer(), reservation.getBoard().getRoomPrice(), reservation.getNights());
-                invoices.add(newInvoice);
-            }
-            break;
+        panel.removeAll();
+
+        JTextField roomnum = new JTextField(20);
+        JButton submitButton = new JButton("Submit");
+        
+        panel.add(new JLabel("Enter the Room Number: "));
+        panel.add(roomnum);
+        panel.add(submitButton);
+
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String numText = roomnum.getText();
+                //establish textboxes for ther questions 
+                int num = Integer.parseInt(numText);
+        
+                for (Reservation reservation : reservations) {
+                    if (Objects.equals(num, reservation.getBoard().getRoomNumber())) {
+                        reservation.setCheckOutDate(new Date());
+                        reservation.getBoard().setRoomStatus("Available");
+                        Invoice newInvoice = new Invoice(reservation.getCustomer(), reservation.getBoard().getRoomPrice(), reservation.getNights());
+                        invoices.add(newInvoice);
+                    }
+                }
+        try {
+            initialMenu();
+        } catch (ParseException ex) {
+            ex.printStackTrace();
         }
-        initialMenu();
-    }
+                }
+            });
+            panel.revalidate();
+            panel.repaint();
+    }  
 
-    public void option6() throws ParseException {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("Menu:");
-        System.out.println("1. Add Employee");
-        System.out.println("2. Print Employee Info");
-        System.out.println("3. Show All Employees");
-        System.out.println("4. Edit Employee Info");
-        System.out.println("5. Delete Employee");
-        System.out.println("9. Main Menu");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
-
-        // Get the user input for the option
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
-
-        // Call the respective option
-        switch (option) {
-            case 1:
+    public void option6() {
+        panel.removeAll();
+    
+        String[] buttonLabels = {"Add Employee", "Print Employee Info", "Show All Employees", "Edit Employee Info", "Delete Employee", "Main Menu", "Exit"};
+        JButton[] buttons = new JButton[buttonLabels.length];
+    
+        // Create buttons in a loop
+        for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setPreferredSize(new Dimension(750, 250));
+            panel.add(buttons[i]);
+        }
+    
+        // Add action listeners for each button
+        buttons[0].addActionListener(e -> {
+            try {
                 option6_1();
-                break;
-            case 2:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option6_1
+            }
+        });
+    
+        buttons[1].addActionListener(e -> {
+            try {
                 option6_2();
-                break;
-            case 3:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option6_2
+            }
+        });
+    
+        buttons[2].addActionListener(e -> {
+            try {
                 option6_3();
-                break;
-            case 4:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option6_3
+            }
+        });
+    
+        buttons[3].addActionListener(e -> {
+            try {
                 option6_4();
-                break;
-            case 5:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option6_4
+            }
+        });
+    
+        buttons[4].addActionListener(e -> {
+            try {
                 option6_5();
-                break;
-            case 9:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option6_5
+            }
+        });
+    
+        buttons[5].addActionListener(e -> {
+            try {
                 initialMenu();
-                break;
-            case 0:
-                System.out.println("Bye");
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
-        }
-        System.out.println("~".repeat(18));
-        if (option == 0) {
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for initialMenu
+            }
+        });
+    
+        buttons[6].addActionListener(e -> {
+            System.out.println("Bye");
             System.exit(0);
+        });
+    
+        // Update the layout and repaint the UI
+        frame.revalidate();
+        frame.repaint();
+    }    
+
+    public void option7() {
+        panel.removeAll();
+    
+        String[] buttonLabels = {"Search Invoice", "Show All Invoices", "Main Menu", "Exit"};
+        JButton[] buttons = new JButton[buttonLabels.length];
+    
+        // Create buttons in a loop since all buttons will be the same size 
+        for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setPreferredSize(new Dimension(750, 250));
+            panel.add(buttons[i]);
         }
-        initialMenu();
-    }
-
-    public void option7() throws ParseException {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("Menu:");
-        System.out.println("1. Search Invoice");
-        System.out.println("2. Show All Invoices");
-        System.out.println("9. Main Menu");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
-
-        // Get the user input for the option
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
-
-        // Call the respective option
-        switch (option) {
-            case 1:
+    
+        // Add action listeners for each button
+        buttons[0].addActionListener(e -> {
+            try {
                 option7_1();
-                break;
-            case 2:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+    
+        buttons[1].addActionListener(e -> {
+            try {
                 option7_2();
-                break;
-            case 9:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+    
+        buttons[2].addActionListener(e -> {
+            try {
                 initialMenu();
-                break;
-            case 0:
-                System.out.println("Bye");
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
-        }
-        System.out.println("~".repeat(18));
-        if (option == 0) {
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+    
+        buttons[3].addActionListener(e -> {
+            System.out.println("Bye");
             System.exit(0);
-        }
-        initialMenu();
+        });
+    
+        frame.revalidate();
+        frame.repaint();
     }
+    
 
-    public void option8() throws ParseException {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("Menu:");
-        System.out.println("1. Print Guest Report");
-        System.out.println("2. Print Employee Report");
-        System.out.println("3. Print Total Revenue");
-        System.out.println("9. Main Menu");
-        System.out.println("0. Exit");
-        System.out.print("Enter your choice: ");
-
-        // Get the user input for the option
-        int option = in.nextInt();
-        System.out.println("You selected " + option);
-
-        // Call the respective option
-        switch (option) {
-            case 1:
-                option3_3();;
-                break;
-            case 2:
+    public void option8() {
+        panel.removeAll();
+    
+        String[] buttonLabels = {"Print Guest Report", "Print Employee Report", "Print Total Revenue", "Main Menu", "Exit"};
+        JButton[] buttons = new JButton[buttonLabels.length];
+    
+        // Create buttons in a loop
+        for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setPreferredSize(new Dimension(750, 250));
+            panel.add(buttons[i]);
+        }
+    
+        // Add action listeners for each button
+        buttons[0].addActionListener(e -> {
+            try {
+                option3_3();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option3_3
+            }
+        });
+    
+        buttons[1].addActionListener(e -> {
+            try {
                 option6_3();
-                break;
-            case 3:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option6_3
+            }
+        });
+    
+        buttons[2].addActionListener(e -> {
+            try {
                 option7_2();
-                break;
-            case 9:
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for option7_2
+            }
+        });
+    
+        buttons[3].addActionListener(e -> {
+            try {
                 initialMenu();
-                break;
-            case 0:
-                System.out.println("Bye");
-                break;
-            default:
-                System.out.println("Invalid option");
-                break;
-        }
-        System.out.println("~".repeat(18));
-        if (option == 0) {
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+                // Handle the ParseException for initialMenu
+            }
+        });
+    
+        buttons[4].addActionListener(e -> {
+            System.out.println("Bye");
             System.exit(0);
-        }
-        initialMenu();
+        });
+    
+        // Update the layout and repaint the UI
+        frame.revalidate();
+        frame.repaint();
     }
+    
 
-    public void option1_1() throws ParseException{
-        Scanner in = new Scanner(System.in);
-        Reservation newReservation = new Reservation();
-        newReservation.setCheckInDate();
-        newReservation.setNights();
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Guest first name: ");
-        String firstName = in.nextLine();
-        for(int i = 0; i < guests.size(); i++) {
-            if(Objects.equals(lastName, guests.get(i).getLastName()) && Objects.equals(firstName, guests.get(i).getFirstName())) {
-                newReservation.setCustomer(guests.get(i));
-                break;
-            } else {
-                Guest newGuest = new Guest();
-                newReservation.setCustomer(newGuest);
-                newGuest.setLastName(lastName);
-                newGuest.setFirstName(firstName);
-                newGuest.setAge();
-                newGuest.setPhoneNumber();
-                guests.add(newGuest);
-                break;
+    public void option1_1() throws ParseException {
+        panel.removeAll();
+    
+        JTextField lastNameField = new JTextField(10);
+        JTextField firstNameField = new JTextField(10);
+        JTextField numPeopleField = new JTextField(3);  // Only allowed to enter one digit
+        JTextField phoneNumber = new JTextField(15);
+        JTextField Age = new JTextField(3);
+        JTextField nightsField = new JTextField(2);
+        JButton submitButton = new JButton("Submit");
+
+        // Set preferred size for text fields
+        Dimension textFieldSize = new Dimension(150, 25);
+        lastNameField.setPreferredSize(textFieldSize);
+        firstNameField.setPreferredSize(textFieldSize);
+        numPeopleField.setPreferredSize(textFieldSize);
+        phoneNumber.setPreferredSize(textFieldSize);
+        Age.setPreferredSize(textFieldSize);
+
+        // Use GridLayout for a more organized layout
+        panel.setLayout(new GridLayout(0, 2, 20, 20));
+        // Add labels and text fields to the input panel
+        panel.add(new JLabel("Enter the Guest last name:"));
+        panel.add(lastNameField);
+        panel.add(new JLabel("Enter the Guest first name:"));
+        panel.add(firstNameField);
+        panel.add(new JLabel("Enter the number of people:"));
+        panel.add(numPeopleField);
+        panel.add(new JLabel("Enter the Guest Phone Number:"));
+        panel.add(phoneNumber);
+        panel.add(submitButton);
+
+       
+    
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                panel.removeAll();
+
+                JTextField ageField = new JTextField(3);
+                JTextField nightsField = new JTextField(2);
+                JButton submitButton2 = new JButton("Submit");
+
+                // Add labels and text fields to the input panel
+                panel.add(new JLabel("Enter the Guest Age:"));
+                panel.add(Age);
+                panel.add(new JLabel("Enter the number of nights to stay (1-21):"));//maximum nights are 21 for this hotel
+                panel.add(nightsField);;
+                panel.add(submitButton2);
+            
+
+                submitButton2.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+
+                String lastName = lastNameField.getText();
+                String firstName = firstNameField.getText();
+                int numPeople = Integer.parseInt(numPeopleField.getText());
+                String phoneNum = phoneNumber.getText();
+                int age = Integer.parseInt(Age.getText());
+                int nights = Integer.parseInt(nightsField.getText());
+                    
+    
+                Reservation newReservation = new Reservation();
+                newReservation.setCheckInDate();
+                newReservation.setNights(nights);
+                newReservation.calculateCheckOutDate();
+    
+                // Use a flag to track whether a matching guest is found
+                boolean guestFound = false;
+    
+                for (Guest guest : guests) {
+                    if (Objects.equals(lastName, guest.getLastName()) && Objects.equals(firstName, guest.getFirstName())) {
+                        newReservation.setCustomer(guest);
+                        guestFound = true;
+                        break;
+                    }
+                }
+                if (!guestFound) {
+                    Guest newGuest = new Guest(firstName, lastName, age);
+                    newGuest.setPhoneNumber(phoneNum);
+                    newReservation.setCustomer(newGuest);
+                    guests.add(newGuest);
+                
+                
+    
+               // newReservation.setNumPeople();
+    
+                for (Room room : rooms) {
+                    if (newReservation.getNumPeople() >= room.getMaxGuests() && Objects.equals(room.getRoomStatus(), "Available")) {
+                        newReservation.setBoard(room);
+                        room.setRoomStatus("Reserved");
+                        break;
+                    }
+                }
+    
+                reservations.add(newReservation);
+                try {
+                    initialMenu();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        newReservation.setNumPeople();
-        for (Room room : rooms) {
-            if (newReservation.getNumPeople() >= room.getMaxGuests() && Objects.equals(room.getRoomStatus(), "Available")) {
-                newReservation.setBoard(room);
-                room.setRoomStatus("Reserved");
-                break;
+    
+                try {
+                    initialMenu();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        reservations.add(newReservation);
-        initialMenu();
+        });
+        panel.revalidate();
+        panel.repaint();
     }
-
+});
+    
+        // Update the layout and repaint the UI
+        panel.revalidate();
+        panel.repaint();
+    }
+    
     public void option1_2() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Guest last name: ");
@@ -564,7 +867,7 @@ public class Menu {
         }
         initialMenu();
     }
-    boolean containsName(List<Guest> list,String name) {
+    boolean containsName(java.util.List<Guest> list, String name) {
         return list.stream().anyMatch(p -> p.getLastName().equals(name));
     }
 
@@ -600,10 +903,10 @@ public class Menu {
                          reservation.setCheckOutDate();
                          break;
                      case 3:
-                         reservation.setNumPeople();
+                        // reservation.setNumPeople();
                          break;
                      case 4:
-                         reservation.setNights();
+                       //  reservation.setNights();
                          break;
                      case 9:
                          initialMenu();
@@ -717,10 +1020,7 @@ public class Menu {
 
     public void option3_1() throws ParseException {
         Guest newGuest = new Guest();
-        newGuest.setFirstName();
-        newGuest.setLastName();
-        newGuest.setAge();
-        newGuest.setPhoneNumber();
+        //
         guests.add(newGuest);
         initialMenu();
     }
@@ -741,12 +1041,43 @@ public class Menu {
         initialMenu();
     }
     public void option3_3() throws ParseException {
-        System.out.print("\t\tFirst Name\t\tLast Name\t\tAge\t\tPhone Number\n\n");
+        panel.removeAll();
+    
+        JButton submitButton = new JButton("Okay");
+    
+        StringBuilder combinedGuests = new StringBuilder();
+    
         for (Guest guest : guests) {
-            guest.printGuest();
+            combinedGuests.append(guest.printGuest());
         }
-        initialMenu();
+    
+        // Convert StringBuilder to a String and print it
+        String finalResult = combinedGuests.toString();
+       
+
+        JLabel label = new JLabel("<html>" + "All Guest" + finalResult.replaceAll("\n", "<br>") + "</html>");
+
+         //Setting the front size
+         label.setFont(new Font("Arial", Font.PLAIN, 19));
+        panel.add(label);
+    
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    initialMenu();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                    // Handle the ParseException for initialMenu
+                }
+            }
+        });
+    
+        panel.add(submitButton);
+    
+        panel.revalidate();
+        panel.repaint();
     }
+    
 
     public void option3_4() throws ParseException {
         boolean exists = false;
@@ -767,30 +1098,9 @@ public class Menu {
                 System.out.println("0. Exit");
                 System.out.print("Enter your choice: ");
                 option = in.nextInt();
-                switch (option) {
-                    case 1:
-                        guest.setFirstName();
-                        break;
-                    case 2:
-                        guest.setFirstName();
-                        break;
-                    case 3:
-                        guest.setAge();
-                        break;
-                    case 4:
-                        guest.setPhoneNumber();
-                        break;
-                    case 9:
-                        initialMenu();
-                        break;
-                    case 0:
-                        System.out.println("Bye");
-                        break;
-                    default:
-                        System.out.println("Invalid option");
-                        break;
+                //
 
-                }
+                
             }
 
         }
