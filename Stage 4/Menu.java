@@ -790,7 +790,10 @@ public class Menu extends JFrame {
                 String phoneNum = phoneNumber.getText();
                 int age = Integer.parseInt(Age.getText());
                 int nights = Integer.parseInt(nightsField.getText());
-                    
+                
+                Guest names = new Guest();
+                names.setFirstName(firstName);
+                names.setLastName(lastName);
     
                 Reservation newReservation = new Reservation();
                 newReservation.setCheckInDate();
@@ -802,20 +805,23 @@ public class Menu extends JFrame {
     
                 for (Guest guest : guests) {
                     if (Objects.equals(lastName, guest.getLastName()) && Objects.equals(firstName, guest.getFirstName())) {
+                        frame.dispose();
                         newReservation.setCustomer(guest);
                         guestFound = true;
+                        try {
+                            initialMenu();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
                         break;
                     }
                 }
                 if (!guestFound) {
+                    frame.dispose();
                     Guest newGuest = new Guest(firstName, lastName, age);
                     newGuest.setPhoneNumber(phoneNum);
                     newReservation.setCustomer(newGuest);
                     guests.add(newGuest);
-                
-                
-    
-               // newReservation.setNumPeople();
     
                 for (Room room : rooms) {
                     if (newReservation.getNumPeople() >= room.getMaxGuests() && Objects.equals(room.getRoomStatus(), "Available")) {
@@ -832,12 +838,6 @@ public class Menu extends JFrame {
                     ex.printStackTrace();
                 }
             }
-    
-                try {
-                    initialMenu();
-                } catch (ParseException ex) {
-                    ex.printStackTrace();
-                }
             }
         });
         panel.revalidate();
@@ -851,25 +851,87 @@ public class Menu extends JFrame {
     }
     
     public void option1_2() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        if (containsName(guests, lastName)) {
-            System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\t\tNights\t\tRoom\t\t\tPeople\n\n");
-            for(int i = 0; i < reservations.size(); i++) {
-                if(Objects.equals(lastName, reservations.get(i).getCustomer().getLastName())) {
-                    reservations.get(i).printReservation();
-                }
-
-            }
-        } else{
-            System.out.println("There is no Guest with this last name.");
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+        if (frame != null) {
+            frame.dispose();
         }
-        initialMenu();
+    
+        JFrame newFrame = new JFrame("");
+        JPanel newpanel = new JPanel(null);
+        newFrame.setSize(500, 300);
+    
+        JTextField lastNameField = new JTextField(10);
+        JButton submitButton = new JButton("Submit");
+    
+        JTextArea outputTextArea = new JTextArea();
+        outputTextArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputTextArea);
+    
+        lastNameField.setBounds(10, 10, 150, 25);
+        submitButton.setBounds(10, 40, 80, 25);
+        scrollPane.setBounds(10, 70, 480, 150); // Increase the height to 150 or another suitable value
+    
+        newpanel.add(new JLabel("Enter the Guest last name:"));
+        newpanel.getComponent(0).setBounds(10, 10, 200, 25);
+        newpanel.add(lastNameField);
+        newpanel.getComponent(1).setBounds(10, 40, 150, 25);
+        newpanel.add(submitButton);
+        newpanel.getComponent(2).setBounds(170, 40, 80, 25);
+    
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                newpanel.removeAll();
+                JButton Okaybutton = new JButton("Ok");
+                submitButton.setBounds(10, 40, 80, 25);
+    
+                String lastName = lastNameField.getText();
+                if (containsName(guests, lastName)) {
+                    StringBuilder combinedReservations = new StringBuilder();
+                    for (Reservation reservation : reservations) {
+                        if (Objects.equals(lastName, reservation.getCustomer().getLastName())) {
+                            combinedReservations.append(reservation.printReservation());
+                            combinedReservations.append("\n");
+                        }
+                    }
+                    outputTextArea.setText(combinedReservations.toString());
+                } else {
+                    outputTextArea.setText("There is no Guest with this last name.\n");
+                }
+    
+                newpanel.add(scrollPane);
+                scrollPane.setBounds(10, 70, 480, 150); // Adjust the size if needed
+                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+    
+                newpanel.add(Okaybutton);
+                newpanel.getComponent(1).setBounds(170, 40, 80, 25);
+                Okaybutton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        newFrame.dispose();
+                        try {
+                            initialMenu();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+    
+                newpanel.revalidate();
+                newpanel.repaint();
+            }
+    
+            boolean containsName(java.util.List<Guest> list, String name) {
+                return list.stream().anyMatch(p -> p.getLastName().equals(name));
+            }
+        });
+    
+        newFrame.add(newpanel);
+        newFrame.setPreferredSize(new Dimension(550, 350));
+        newFrame.pack();
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        newFrame.setVisible(true);
     }
-    boolean containsName(java.util.List<Guest> list, String name) {
-        return list.stream().anyMatch(p -> p.getLastName().equals(name));
-    }
+    
 
     public void option1_3() throws ParseException {
         System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\t\tRoom\t\t\tPeople\n\n");
@@ -1028,17 +1090,6 @@ public class Menu extends JFrame {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Guest last name: ");
         String lastName = in.nextLine();
-        if (containsName(guests, lastName)) {
-            System.out.print("\t\tFirst Name \t\tLast Name \t\tAge\t\tPhone Number \n\n");
-            for (Guest guest : guests) {
-                if (Objects.equals(lastName, guest.getLastName())) {
-                    guest.printGuest();
-                }
-            }
-        } else {
-            System.out.print("Guest with this last name does not exist.");
-        }
-        initialMenu();
     }
     public void option3_3() throws ParseException {
         panel.removeAll();
