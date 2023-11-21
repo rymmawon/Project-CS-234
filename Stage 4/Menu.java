@@ -289,6 +289,7 @@ public class Menu extends JFrame {
         mainMenuButton.setPreferredSize(buttonSize);
         mainMenuButton.addActionListener(e -> {
             try {
+                frame.dispose();
                 initialMenu();
             } catch (ParseException p) {
                 p.printStackTrace();
@@ -298,7 +299,7 @@ public class Menu extends JFrame {
     
         exitButton.setPreferredSize(buttonSize);
         exitButton.addActionListener(e -> {
-            System.out.println("Bye");
+            frame.dispose();
             System.exit(0);
         });
     
@@ -392,7 +393,6 @@ public class Menu extends JFrame {
         // Size for each button
         Dimension buttonSize = new Dimension(750, 333); // size for new buttons
     
-        // Create buttons in a loop
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
             buttons[i].setPreferredSize(buttonSize);
@@ -522,7 +522,7 @@ public class Menu extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String numText = roomnum.getText();
-                //establish textboxes for ther questions 
+                //establish textboxes for there questions 
                 int num = Integer.parseInt(numText);
         
                 for (Reservation reservation : reservations) {
@@ -869,7 +869,7 @@ public class Menu extends JFrame {
     
         lastNameField.setBounds(10, 10, 150, 25);
         submitButton.setBounds(10, 40, 80, 25);
-        scrollPane.setBounds(10, 70, 480, 150); // Increase the height to 150 or another suitable value
+        scrollPane.setBounds(10, 70, 480, 150); 
     
         newpanel.add(new JLabel("Enter the Guest last name:"));
         newpanel.getComponent(0).setBounds(10, 10, 200, 25);
@@ -933,94 +933,210 @@ public class Menu extends JFrame {
     }
     
 
-    public void option1_3() throws ParseException {
-        System.out.print("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\t\tRoom\t\t\tPeople\n\n");
-        for (Reservation reservation : reservations) {
-            reservation.printReservation();
-        }
-        initialMenu();
-    }
-     public void option1_4() throws ParseException {
-         Scanner in = new Scanner(System.in);
-         System.out.print("Enter the Guest last name: ");
-         String lastName = in.nextLine();
-         System.out.print("Enter the Guest first name: ");
-         String firstName = in.nextLine();
-         for (Reservation reservation : reservations) {
-             if (Objects.equals(lastName, reservation.getCustomer().getLastName()) && Objects.equals(firstName, reservation.getCustomer().getFirstName())) {
-                 System.out.println("What would you like to edit? ");
-                 System.out.println("1. Check In Date");
-                 System.out.println("2. Check Out Date");
-                 System.out.println("3. Number of People");
-                 System.out.println("3. Nights Stayed");
-                 System.out.println("9. Main Menu");
-                 System.out.println("0. Exit");
-                 System.out.print("Enter your choice: ");
-                 int option = in.nextInt();
-                 switch (option) {
-                     case 1:
-                         reservation.setCheckInDate();
-                         break;
-                     case 2:
-                         reservation.setCheckOutDate();
-                         break;
-                     case 3:
-                        // reservation.setNumPeople();
-                         break;
-                     case 4:
-                       //  reservation.setNights();
-                         break;
-                     case 9:
-                         initialMenu();
-                         break;
-                     case 0:
-                         System.out.println("Bye");
-                         break;
-                     default:
-                         System.out.println("Invalid option");
-                         break;
-                 }
-             }else {
-                 System.out.println("Reservation is not found.");
-             }
-         }
-         initialMenu();
-     }
-    public void option1_5() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Guest first name: ");
-        String firstName = in.nextLine();
-        for(int i = 0; i < reservations.size(); i++) {
-            if(Objects.equals(lastName, reservations.get(i).getCustomer().getLastName()) && Objects.equals(firstName, reservations.get(i).getCustomer().getFirstName())) {
-                reservations.remove(i);
-                break;
+        public void option1_3() throws ParseException {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            if (frame != null) {
+                frame.dispose();
             }
+        
+            JTextArea outputTextArea = new JTextArea();
+            JFrame newFrame = new JFrame("");
+            JPanel newpanel = new JPanel(new BorderLayout());
+            JButton okayButton = new JButton("OK");
+            newFrame.setSize(500, 300);
+        
+            StringBuilder combinedReservations = new StringBuilder();
+            for (Reservation reservation : reservations) {
+                combinedReservations.append(reservation.printReservation());
+                combinedReservations.append("\n");
+            }
+        
+            outputTextArea.setText("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\t\tRoom\t\t\tPeople\n\n" + combinedReservations.toString());
+            outputTextArea.setEditable(false);
+        
+            newpanel.add(new JScrollPane(outputTextArea), BorderLayout.CENTER);//scroll wheel to navigate
+            
+            // Add the OK button to the east side
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            buttonPanel.add(okayButton);
+            newpanel.add(buttonPanel, BorderLayout.EAST);
+        
+            okayButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    newFrame.dispose();
+                    try {
+                        initialMenu();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        
+            // Other components and frame setup
+        
+            newFrame.add(newpanel);
+            newFrame.setPreferredSize(new Dimension(1500, 1300));
+            newFrame.pack();
+            newFrame.setLocationRelativeTo(null);
+            newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            newFrame.setVisible(true);
         }
-        initialMenu();
-    }
 
-    public void option2_1() throws ParseException {
-        System.out.print("\tRoom \t\t\t Bed \t\t\t Maximum Guest\t\t\t Price \n\n");
-        for (Room room : rooms) {
-            if (Objects.equals(room.getRoomStatus(), "Available")) {
-                room.printRoom();
+        public void option2_1() throws ParseException {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            if (frame != null) {
+                frame.dispose();
             }
-        }
-        initialMenu();
-    }
-    public void option2_2() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Room number: ");
-        int num = in.nextInt();
-        for (Room room : rooms) {
-            if (Objects.equals(room.getRoomNumber(), num)) {
-                System.out.println("Room " + room.getRoomNumber() + " is " + room.getRoomStatus());
+        
+            // Check if there are available rooms
+            boolean hasAvailableRooms = false;
+            for (Room room : rooms) {
+                if (Objects.equals(room.getRoomStatus(), "Available")) {
+                    hasAvailableRooms = true;
+                    break;
+                }
             }
+        
+            if (hasAvailableRooms) {
+                JTextArea outputTextArea = new JTextArea();
+                JFrame newFrame = new JFrame("");
+                JPanel newpanel = new JPanel(new BorderLayout());
+                JButton okayButton = new JButton("OK");
+                newFrame.setSize(500, 300);
+        
+                StringBuilder combinedRooms = new StringBuilder();
+                
+                for (Room room : rooms) {
+                    if (Objects.equals(room.getRoomStatus(), "Available")) {
+                        combinedRooms.append(room.printRoom());
+                        combinedRooms.append("\n");
+                    }
+                }
+                outputTextArea.setText("\tRoom \t\t\t Bed \t\t\t Maximum Guest\t\t\t Price \n\n"+ combinedRooms.toString());
+                outputTextArea.setEditable(false);
+        
+                newpanel.add(new JScrollPane(outputTextArea), BorderLayout.CENTER);
+        
+                JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+                buttonPanel.add(okayButton);
+                newpanel.add(buttonPanel, BorderLayout.EAST);
+        
+                okayButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        newFrame.dispose();
+                        try {
+                            initialMenu();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                newFrame.add(newpanel);
+                newFrame.setPreferredSize(new Dimension(1500, 1300));
+                newFrame.pack();
+                newFrame.setLocationRelativeTo(null);
+                newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                newFrame.setVisible(true);
+            } 
         }
-        initialMenu();
-    }
+        public void option2_2() throws ParseException {
+            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+            if (frame != null) {
+                frame.dispose();
+            }
+        
+            JFrame resultFrame = new JFrame("Room Information");
+            JPanel resultPanel = new JPanel(new FlowLayout());
+            resultFrame.setSize(500, 300);
+        
+            JTextField roomNumField = new JTextField(10);
+            JButton submitButton = new JButton("Submit");
+            JTextArea outputTextArea = new JTextArea();
+            outputTextArea.setEditable(false);
+            JButton okayButton = new JButton("Ok");
+            JButton cancelButton = new JButton("Cancel");
+        
+            resultPanel.add(new JLabel("Enter the Room number: "));
+            resultPanel.add(roomNumField);
+            resultPanel.add(submitButton);
+        
+            submitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        int num = Integer.parseInt(roomNumField.getText()); // convert to int
+                        boolean roomFound = false;
+
+                        resultPanel.removeAll();
+                        resultPanel.add(outputTextArea);
+                        resultPanel.add(okayButton);
+                        resultPanel.add(cancelButton);
+        
+                        for (Room room : rooms) {
+                            if (room.getRoomNumber() == num) {
+                                String outcome = "Room " + room.getRoomNumber() + " is " + room.getRoomStatus();
+                                outputTextArea.setText(outcome);
+                                roomFound = true;
+                                okayButton.addActionListener(new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        resultFrame.dispose();
+                                        try {
+                                            initialMenu();
+                                        } catch (ParseException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    }
+                                });
+                                break;
+                            }
+                        }
+        
+                        if (!roomFound) {
+                            outputTextArea.setText("Room " + num + " not found");
+                            okayButton.addActionListener(new ActionListener() {
+                                public void actionPerformed(ActionEvent e) {
+                                    resultFrame.dispose();
+                                    try {
+                                        option2_2();
+                                    } catch (ParseException ex) {
+                                        ex.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+
+                        cancelButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                resultFrame.dispose();
+                                try {
+                                    initialMenu();
+                                } catch (ParseException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        });
+        
+                        resultPanel.removeAll();
+                        resultPanel.add(outputTextArea);
+                        resultPanel.add(okayButton);
+                        resultPanel.add(cancelButton);
+        
+                        
+        
+                        resultFrame.revalidate();
+                        resultFrame.repaint();
+                    } catch (NumberFormatException ex) {
+                        outputTextArea.setText("Invalid room number format");
+                    }
+                }
+            });
+            resultFrame.add(resultPanel);
+            resultFrame.setPreferredSize(new Dimension(500, 300));
+            resultFrame.pack();
+            resultFrame.setLocationRelativeTo(null);
+            resultFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            resultFrame.setVisible(true);
+        }
+           
     public void option2_3() throws ParseException {
         boolean exists = false;
         Scanner in = new Scanner(System.in);
@@ -1108,7 +1224,7 @@ public class Menu extends JFrame {
 
         JLabel label = new JLabel("<html>" + "All Guest" + finalResult.replaceAll("\n", "<br>") + "</html>");
 
-         //Setting the front size
+         //Setting the front size and style
          label.setFont(new Font("Arial", Font.PLAIN, 19));
         panel.add(label);
     
@@ -1118,7 +1234,6 @@ public class Menu extends JFrame {
                     initialMenu();
                 } catch (ParseException ex) {
                     ex.printStackTrace();
-                    // Handle the ParseException for initialMenu
                 }
             }
         });

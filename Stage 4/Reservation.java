@@ -248,7 +248,6 @@ public class Reservation {
     
 
     public String printReservation() {
-        System.out.println("Chozen");
         SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
         StringBuilder formattedString = new StringBuilder("|" + "\t");
         
