@@ -383,6 +383,7 @@ public class Menu extends JFrame {
     
         buttons[4].addActionListener(e -> {
             try {
+                frame.dispose();
                 initialMenu();
             } catch (ParseException ex) {
                 ex.printStackTrace();
@@ -463,6 +464,7 @@ public class Menu extends JFrame {
     
         buttons[6].addActionListener(e -> {
             try {
+                frame.dispose();
                 initialMenu();
             } catch (ParseException ex) {
                 ex.printStackTrace();
@@ -481,42 +483,120 @@ public class Menu extends JFrame {
     
        
     public void option4() throws ParseException {
-        panel.removeAll();
+        frame.dispose();
+
+        JFrame newFrame = new JFrame("Check in");
+        JPanel newpanel = new JPanel(null);  // Use absolute positioning
+        newFrame.setSize(1500, 300);
 
         JTextField lastNameField = new JTextField(20);
         JTextField firstNameField = new JTextField(20);
         JButton submitButton = new JButton("Submit");
-        
-        panel.add(new JLabel("Enter the Guest last name: "));
-        panel.add(lastNameField);
-        panel.add(new JLabel("Enter the Guest first name: "));
-        panel.add(firstNameField);
-        panel.add(submitButton);
-        
+        JButton okayButton = new JButton("OK");
+        JButton okayButton2 = new JButton("OK");
+        JButton cancelButton = new JButton("Cancel");
+        JTextArea availableTextArea = new JTextArea();
+        JTextArea notAvailableTextArea = new JTextArea();
+
+        JLabel lastNameLabel = new JLabel("Enter the Guest last name: ");
+        lastNameLabel.setBounds(10, 10, 150, 25);
+        newpanel.add(lastNameLabel);
+
+        lastNameField.setBounds(170, 10, 200, 25);
+        newpanel.add(lastNameField);
+
+        JLabel firstNameLabel = new JLabel("Enter the Guest first name: ");
+        firstNameLabel.setBounds(10, 40, 150, 25);
+        newpanel.add(firstNameLabel);
+
+        firstNameField.setBounds(170, 40, 200, 25);
+        newpanel.add(firstNameField);
+
+        submitButton.setBounds(10, 80, 100, 25);
+        newpanel.add(submitButton);
+
+        cancelButton.setBounds(120, 80, 100, 25);
+        newpanel.add(cancelButton);
+
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //establish textboxes for there questions 
-                String lastName = lastNameField.getText();//receive strings from the user
+                String lastName = lastNameField.getText();
                 String firstName = firstNameField.getText();
         
+                newpanel.removeAll();
+        
+                JTextArea resultTextArea = new JTextArea();
+                resultTextArea.setBounds(10, 110, 300, 100);
+                newpanel.add(resultTextArea);
+        
+                boolean reservationFound = false;
+        
+                resultTextArea.setBounds(10, 110, 400, 100);  // Adjust the width (e.g., set to 400)
+                newpanel.add(resultTextArea);
+
                 for (Reservation reservation : reservations) {
-                    if (Objects.equals(lastName, reservation.getCustomer().getLastName()) && Objects.equals(firstName, reservation.getCustomer().getFirstName())) {
+                    if (Objects.equals(lastName, reservation.getCustomer().getLastName()) &&
+                            Objects.equals(firstName, reservation.getCustomer().getFirstName())) {
+                        reservationFound = true;
+
                         reservation.setCheckInDate(new Date());
                         reservation.getBoard().setRoomStatus("Reserved");
-                        break; 
+                        resultTextArea.setText("Thank you " + firstName + " your room is now reserved.");
+                        okayButton2.setBounds(10, 220, 100, 25);
+                        newpanel.add(okayButton2);
+                        break;
                     }
                 }
-        try {
-            initialMenu();
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        
+                if (!reservationFound) {
+                    resultTextArea.setText("Sorry " + firstName + " no reservation found.");
+                okayButton.setBounds(10, 220, 100, 25);
+                newpanel.add(okayButton);
                 }
-            });
-            panel.revalidate();
-            panel.repaint();
-    }
+                okayButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        newFrame.dispose();
+                        try {
+                            option4();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                okayButton2.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        newFrame.dispose();
+                        try {
+                            initialMenu();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+        
+                newpanel.revalidate();
+                newpanel.repaint();
+            }
+        });
+        
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                newFrame.dispose();
+                try {
+                    initialMenu();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
+        newFrame.add(newpanel);
+        newFrame.setPreferredSize(new Dimension(550, 350));
+        newFrame.pack();
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        newFrame.setVisible(true);
+    }
     public void option5() throws ParseException {
         panel.removeAll();
 
@@ -721,6 +801,7 @@ public class Menu extends JFrame {
     
         buttons[3].addActionListener(e -> {
             try {
+                frame.dispose();
                 initialMenu();
             } catch (ParseException ex) {
                 ex.printStackTrace();
@@ -1274,14 +1355,62 @@ public class Menu extends JFrame {
             resultFrame.setVisible(true);
         }
         
-    public void option2_4() throws ParseException {
-        System.out.print("\t\t Room \t\t Bed Size \t\tBed Number \t\tMaximum Guest \t\tPrice ****\n\n");
-        for (Room room : rooms) {
-            room.printRoom();
-        }
-        initialMenu();
-    }
+        public void option2_4() throws ParseException {
+            panel.removeAll();
+        
+            JButton submitButton = new JButton("Okay");
+        
+            StringBuilder combinedRooms = new StringBuilder();
+        
+            for (Room room : rooms) {
+                combinedRooms.append(room.printRoom());
+            }
+        
+            String finalResult = combinedRooms.toString();
+            JLabel label = new JLabel("<html>" + "All Rooms" + finalResult.replaceAll("\n", "<br>") + "</html>");
 
+
+        
+            // Setting the font size and style
+            Font labelFont = new Font("Arial", Font.PLAIN, 13); // Adjust the font size as needed
+            label.setFont(labelFont);
+            // Get the text area from the JScrollPane's viewport
+            JTextArea textArea = new JTextArea(finalResult);
+            textArea.setMargin(new Insets(20, 20, 20, 20));  // Set line and paragraph margins to zero
+
+            // Customize text area properties if needed
+            textArea.setFont(new Font("Arial", Font.PLAIN, 13)); // Adjust the font size as needed
+
+            JScrollPane scrollPane = new JScrollPane(textArea);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+            Dimension textAreaSize = new Dimension(0, 1000); // Adjust width and height as needed
+            scrollPane.setPreferredSize(textAreaSize);
+
+            // Use BorderLayout for the main panel
+            panel.setLayout(new BorderLayout());
+
+            // Add the scroll pane to the center
+            panel.add(scrollPane);
+
+            // Add the submit button to the east (right) side
+            panel.add(submitButton, BorderLayout.EAST);
+
+            submitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        frame.dispose();
+                        initialMenu();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        
+            panel.revalidate();
+            panel.repaint();
+        }
+        
     public void option3_1() throws ParseException {
         Guest newGuest = new Guest();
         //
@@ -1303,7 +1432,6 @@ public class Menu extends JFrame {
         for (Guest guest : guests) {
             combinedGuests.append(guest.printGuest());
         }
-    
         // Convert StringBuilder to a String and print it
         String finalResult = combinedGuests.toString();
        
@@ -1317,6 +1445,7 @@ public class Menu extends JFrame {
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    frame.dispose();
                     initialMenu();
                 } catch (ParseException ex) {
                     ex.printStackTrace();
