@@ -1,7 +1,12 @@
-import java.text.SimpleDateFormat;
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Objects;
+import java.util.List;
+import java.util.Scanner;
 
-class Room {
+public class Room {
 
     private int roomNumber;
     private String bedSize;
@@ -10,12 +15,28 @@ class Room {
     private double roomPrice;
     private String roomStatus;
 
+    JFrame frame = new JFrame("Room");
+    JPanel panel = new JPanel(new FlowLayout());
+    JTextArea outputTextArea = new JTextArea();
+
+    JTextField roomNumField = new JTextField(10);
+        JButton submitButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+        JButton okayButton = new JButton("Okay");
+        JButton tryAgainButton = new JButton("Try Again");
+
+        
+
     public Room() {
         roomNumber = 0;
         bedSize = "";
         maxGuests = 0;
         roomPrice = 0;
         roomStatus = "";
+
+        frame.setSize(500, 300);
+
+        
     }
 
     // Parameterized constructor
@@ -27,7 +48,7 @@ class Room {
         setRoomPrice(); // Initialize roomPrice
         this.roomStatus = "Available"; // Initialize roomStatus to "Available"
     }
-    
+
     public int getRoomNumber() {
         return roomNumber;
     }
@@ -38,14 +59,51 @@ class Room {
     }
 
     public void setBedSize() {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the bed size Queen or King: ");
-        bedSize = in.nextLine();
-        while(!Objects.equals(bedSize, "Queen") && !Objects.equals(bedSize, "King")) {
-            System.out.println("Wrong Bed type. Try again. ");
-            System.out.print("Enter the bed size Queen or King: ");
-            bedSize = in.nextLine();
-        }
+        panel.removeAll();
+        JLabel bedLabel = new JLabel("Enter the bed size Queen or King: ");
+        JTextField bedSizTextField = new JTextField(10);
+
+        panel.add(bedLabel);
+        panel.add(bedSizTextField);
+        panel.add(submitButton);
+
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String newbedSize = bedSizTextField.getText();
+                if (!Objects.equals(bedSize, "Queen") && !Objects.equals(bedSize, "King")) {
+                    outputTextArea.setText("Wrong Bed type. Try again.");
+                    panel.add(outputTextArea);
+                    panel.add(tryAgainButton);
+                } else {
+                    setBedSize(newbedSize);
+                    outputTextArea.setText("Okay " + newbedSize + " is now set.");
+                    panel.add(outputTextArea);
+                    panel.add(okayButton);
+                }
+
+                panel.revalidate();
+                panel.repaint();
+            }
+        });
+
+        okayButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+            }
+        });
+
+        tryAgainButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                setBedSize();
+            }
+        });
+        frame.add(panel);
+        frame.setPreferredSize(new Dimension(500, 300));
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
     }
     // Getter for bedSize
     public String getBedSize(int roomNumber) {
@@ -111,13 +169,29 @@ class Room {
     }
 
     public void modifyRoom() {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the bed size: ");
-        bedSize = in.nextLine();
-        System.out.print("Enter the maximum guests:");
-        maxGuests = in.nextInt();
-        System.out.print("Enter the price per night ");
-        roomPrice = in.nextDouble();
+    panel.removeAll();
+    JLabel bedLabel =new JLabel("Enter the bed size: ");
+    JLabel maxGuestLabel =new JLabel("Enter the maximum guests:");
+    JLabel roomPriceLabel =new JLabel("Enter the price per night: ");
+    JTextField bedSizTextField = new JTextField();
+    JTextField maxGuesTextField = new JTextField();
+    JTextField roomPriceTextField = new JTextField();
+
+    panel.add(bedLabel);
+    panel.add(bedSizTextField);
+    panel.add(maxGuestLabel);
+    panel.add(maxGuesTextField);
+    panel.add(roomPriceLabel);
+    panel.add(roomPriceTextField);
+
+    submitButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String bedSize =bedSizTextField.getText();
+            String maxGuest = maxGuesTextField.getText();
+            int roomPrice = Integer.parseInt(roomPriceTextField.getText());
+
+        }});
+
     }
 
     public String printRoom() {
@@ -140,4 +214,5 @@ class Room {
         System.out.print("Enter the price for the room in $: ");
         roomPrice = in.nextDouble();
     }
+    
 }

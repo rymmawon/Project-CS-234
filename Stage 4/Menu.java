@@ -172,7 +172,6 @@ public class Menu extends JFrame {
         panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        // Create buttons for each menu option
         JButton reservationsButton = new JButton("Reservations");
         JButton roomsButton = new JButton("Rooms");
         JButton guestsButton = new JButton("Guests");
@@ -637,7 +636,7 @@ public class Menu extends JFrame {
         
                 boolean reservationFound = false;
         
-                resultTextArea.setBounds(10, 110, 400, 100);  // Adjust the width (e.g., set to 400)
+                resultTextArea.setBounds(10, 110, 400, 100);  
                 newpanel.add(resultTextArea);
 
                 for (Reservation reservation : reservations) {
@@ -663,7 +662,7 @@ public class Menu extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         newFrame.dispose();
                         try {
-                            option4();
+                            option5();
                         } catch (ParseException ex) {
                             ex.printStackTrace();
                         }
@@ -1313,7 +1312,6 @@ public class Menu extends JFrame {
                     try {
                         num = Integer.parseInt(roomNumField.getText()); // convert to int
                     } catch (NumberFormatException ex) {
-                        // Handle the case where the input is not a valid integer
                         ex.printStackTrace();
                         return;
                     }
@@ -1485,7 +1483,6 @@ public class Menu extends JFrame {
         
     public void option3_1() throws ParseException {
         Guest newGuest = new Guest();
-        //
         guests.add(newGuest);
         initialMenu();
     }
@@ -1938,29 +1935,147 @@ public void option6_3() throws ParseException {
     }
 
     public void option7_1() throws ParseException {
-        boolean exists = false;
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Guest first name: ");
-        String firstName = in.nextLine();
-        for (Invoice invoice : invoices) {
-            if (Objects.equals(lastName, invoice.getCostumer().getLastName()) && Objects.equals(lastName, invoice.getCostumer().getFirstName())) {
-                System.out.print("\t\tFirstName\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
-                invoice.printInvoice();
-                exists = true;
+        frame.dispose();
+        JFrame newFrame = new JFrame("Search Invoice");
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel inputPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
+        newFrame.setSize(750, 450);
+    
+        JTextField lastNameField = new JTextField(10);
+        JTextField firstNameField = new JTextField(10);
+        JButton submitButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+        JButton okayButton = new JButton("Ok");
+        JButton tryagainButton = new JButton("Try Again");
+    
+        JTextArea outputTextArea = new JTextArea();
+        outputTextArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(outputTextArea);
+    
+        inputPanel.add(new JLabel("Enter the Guest first Name: "));
+        inputPanel.add(firstNameField);
+        inputPanel.add(new JLabel("Enter the Guest last name: "));
+        inputPanel.add(lastNameField);
+        inputPanel.add(new JLabel(""));
+        inputPanel.add(submitButton);
+        inputPanel.add(cancelButton);
+    
+        mainPanel.add(inputPanel, BorderLayout.NORTH);
+    
+        JPanel titlePanel = new JPanel(); // New JPanel for the title
+        JTextArea title = new JTextArea("\tFirst Name\tLast Name\tNights Stayed\tDiscount\tTotal \n\n");
+        title.setEditable(false);
+        titlePanel.add(title);
+    
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.removeAll();
+                String lastName = lastNameField.getText();
+                String firstName = firstNameField.getText();
+    
+                boolean exists = false;
+    
+                for (Invoice invoice : invoices) {
+                    if (Objects.equals(lastName, invoice.getCostumer().getLastName())
+                            && Objects.equals(firstName, invoice.getCostumer().getFirstName())) {
+                        titlePanel.add(title);
+                        outputTextArea.append(invoice.printInvoice());
+                        exists = true;
+                        buttonPanel.add(okayButton);
+                    }
+                }
+    
+                if (!exists) {
+                    outputTextArea.setText("Invoice is not found for " + firstName + " " + lastName);
+                    buttonPanel.add(tryagainButton);
+                    buttonPanel.add(cancelButton);
+                }
+    
+                ActionListener buttonListener = new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            newFrame.dispose();
+                            option7_1();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                };
+    
+                okayButton.addActionListener(buttonListener);
+                tryagainButton.addActionListener(buttonListener);
+    
+                mainPanel.add(titlePanel, BorderLayout.NORTH);
+                mainPanel.add(scrollPane, BorderLayout.CENTER);
+                mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+    
+                mainPanel.validate();
+                mainPanel.repaint();
             }
-        }
-        if(!exists) {
-            System.out.println("Invoice is not found");
-        }
-        initialMenu();
-    }
+        });
+    
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    newFrame.dispose();
+                    initialMenu();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    
+        newFrame.add(mainPanel);
+        newFrame.setPreferredSize(new Dimension(750, 450));
+        newFrame.pack();
+        newFrame.setLocationRelativeTo(null);
+        newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        newFrame.setVisible(true);
+    }    
+
     public void option7_2() throws ParseException {
-        System.out.print("\t\tFirst Name\t\tLast Name\\tNights Stayed\t\tDiscount\t\tTotal \n\n");
+        panel.removeAll();
+    
+        JButton okayButton = new JButton("Okay");
+        JTextArea allInvoices = new JTextArea();
+    
+        StringBuilder combinedInvoices = new StringBuilder();
+    
         for (Invoice invoice : invoices) {
-                invoice.printInvoice();
+            combinedInvoices.append(invoice.printInvoice());
         }
-        initialMenu();
+    
+        // Convert StringBuilder to a String and print it (just like options before it)
+        String finalResult = combinedInvoices.toString();
+    
+        JTextArea title = new JTextArea("\t\tFirst Name\t\tLast Name\t\tNights Stayed\t\tDiscount\t\tTotal \n\n");
+        title.setEditable(false);
+    
+        JTextArea textArea = new JTextArea(finalResult);
+        textArea.setEditable(false);
+        // Setting the font size and style
+        textArea.setFont(new Font("Arial", Font.PLAIN, 19));
+    
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+    
+        panel.add(title);
+        panel.add(textArea);
+        panel.add(okayButton); 
+    
+        okayButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    frame.dispose();
+                    initialMenu();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    
+        panel.revalidate();
+        panel.repaint();
     }
+    
 }
