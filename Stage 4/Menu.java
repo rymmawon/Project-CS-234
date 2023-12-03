@@ -1,6 +1,7 @@
 import java.text.ParseException;
 import java.util.*;
 import java.lang.Math;
+import java.lang.reflect.Member;
 import java.text.SimpleDateFormat;
 import javax.swing.*; // For GUI components
 import java.awt.*; // For layout managers and basic GUI functionalities
@@ -36,6 +37,7 @@ public class Menu extends JFrame {
         generateReservations();
         generateInvoices();
         generateEmployees();
+        
         try {
             initialMenu();
          } catch (ParseException ex) {
@@ -401,7 +403,10 @@ public class Menu extends JFrame {
     
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
-            buttons[i].setPreferredSize(buttonSize);
+            buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
+            buttons[i].setPreferredSize(new Dimension(2150, 1550));
+            buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
             panel.add(buttons[i]);
         }
     
@@ -906,7 +911,6 @@ public class Menu extends JFrame {
             newpanel.add(answerFields[i]);
             answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
         }
-        //
         newpanel.add(submitButton);
         newpanel.add(cancelButton);
        
@@ -923,12 +927,6 @@ public class Menu extends JFrame {
                 newpanel.add(newanswerFields[i]);
                 newanswerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
             }
-
-                // Add labels and text fields to the input panel
-                //newpanel.add(new JLabel("Enter the Guest Age:"));
-                //newpanel.add(ageField);
-               // newpanel.add(new JLabel("Enter the number of nights to stay (1-21):"));//maximum nights are 21 for this hotel
-                //newpanel.add(nightsField);;
                 newpanel.add(submitButton2);
             
 
@@ -1228,10 +1226,10 @@ public class Menu extends JFrame {
                         resultPanel.removeAll();
                         resultPanel.add(outputTextArea);
                         resultPanel.add(okayButton);
-                        resultPanel.add(cancelButton);
         
                         for (Room room : rooms) {
                             if (room.getRoomNumber() == num) {
+                                 resultPanel.remove(cancelButton);
                                 String outcome = "Room " + room.getRoomNumber() + " is " + room.getRoomStatus();
                                 outputTextArea.setText(outcome);
                                 roomFound = true;
@@ -1251,6 +1249,7 @@ public class Menu extends JFrame {
         
                         if (!roomFound) {
                             outputTextArea.setText("Room " + num + " not found");
+                            resultPanel.add(cancelButton);
                             okayButton.addActionListener(new ActionListener() {
                                 public void actionPerformed(ActionEvent e) {
                                     resultFrame.dispose();
@@ -1273,14 +1272,6 @@ public class Menu extends JFrame {
                                 }
                             }
                         });
-        
-                        resultPanel.removeAll();
-                        resultPanel.add(outputTextArea);
-                        resultPanel.add(okayButton);
-                        resultPanel.add(cancelButton);
-        
-                        
-        
                         resultFrame.revalidate();
                         resultFrame.repaint();
                     } catch (NumberFormatException ex) {
@@ -1334,9 +1325,12 @@ public class Menu extends JFrame {
         
                             // Create buttons in a loop
                             for (int i = 0; i < buttonLabels.length; i++) {
-                                buttons[i] = new JButton(buttonLabels[i]);
-                                buttons[i].setPreferredSize(new Dimension(750, 250));
-        
+                                    buttons[i] = new JButton(buttonLabels[i]);
+                                    buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
+                                    buttons[i].setPreferredSize(new Dimension(2150, 1550));
+                                    buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
+                                    buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
+                                    panel.add(buttons[i]);
                                 // Add action listeners to the buttons
                                 switch (i) {
                                     case 0:
@@ -1545,34 +1539,142 @@ public class Menu extends JFrame {
     }
     
     public void option3_4() throws ParseException {
-        boolean exists = false;
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Guest first name: ");
-        String firstName = in.nextLine();
+        JFrame newframe = new JFrame("Guest Confirming");
+        JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        newframe.setSize(500, 300);
+
+        String[] Labels = {"Enter the Guest last name: ", "Enter the Guest first name: "};
+        JLabel[] questions = new JLabel[Labels.length];
+        JTextField[] answerFields = new JTextField[questions.length];
+        JButton submitButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+        JButton tryagainButton = new JButton("Try again");
+        String[] buttonLabels = {"First Name", "Last Name", "Age", "Phone number", "Main Menu", "Exit"};
+        JButton[] buttons = new JButton[buttonLabels.length]; 
+        JTextArea notfound = new JTextArea();
+
+
+        for (int i = 0; i < questions.length; i++) {
+            JLabel label = new JLabel(Labels[i]);
+            newpanel.add(label);
+
+            answerFields[i] = new JTextField();
+            newpanel.add(answerFields[i]);
+            answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
+            submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            tryagainButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        }
+        newpanel.add(submitButton);
+        newpanel.add(cancelButton);
+       
+    
+        submitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                
+
+        String lastName = answerFields[0].getText();
+        String firstName = answerFields[1].getText();
         for (Guest guest : guests) {
             if (Objects.equals(lastName, guest.getLastName()) && Objects.equals(firstName, guest.getFirstName())) {
-                exists = true;
-                System.out.println("What would you like to edit? ");
-                System.out.println("1. First Name");
-                System.out.println("2. Last Name");
-                System.out.println("3. Age");
-                System.out.println("4. Phone number");
-                System.out.println("9. Main Menu");
-                System.out.println("0. Exit");
-                System.out.print("Enter your choice: ");
-                option = in.nextInt();
-                //
+                
+                newframe.dispose();
+                panel.removeAll();
+               
 
+                 for (int i = 0; i < buttonLabels.length; i++) {
+            buttons[i] = new JButton(buttonLabels[i]);
+            buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
+            buttons[i].setPreferredSize(new Dimension(2150, 1550));
+            buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
+            panel.add(buttons[i]);
+        }
+    
+        buttons[0].addActionListener(o -> {
+            try {
+                option1_1();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
                 
             }
+        });
+    
+        buttons[1].addActionListener(o -> {
+            try {
+                option1_2();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+    
+        buttons[2].addActionListener(o -> {
+            try {
+                option1_3();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        });
+    
+        buttons[3].addActionListener(o -> {
+            try {
+                newframe.dispose();
+                frame.dispose();
+                initialMenu();
+            } catch (ParseException p) {
+                p.printStackTrace();
+            }
+        });
+    
+        buttons[4].addActionListener(o -> {
+            frame.dispose();
+            newframe.dispose();
+        });
 
-        }
-        if(!exists) {
-            System.out.println("The Guest is not found");
-        }
-        initialMenu();
+            }
+
+        
+        else {
+            newpanel.removeAll();
+            notfound.setText("The Guest " + firstName + " " + lastName + " is not found");
+            newpanel.add(notfound);
+            cancelButton.setPreferredSize(new Dimension(5, 5));
+            tryagainButton.setPreferredSize(new Dimension(5, 5));
+            newpanel.add(cancelButton);
+            newpanel.add(tryagainButton);
+            newframe.revalidate();
+            newframe.repaint();
+        }   }
+        frame.revalidate();
+        frame.repaint();
+            }});
+            cancelButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                newframe.dispose();
+                                frame.dispose();
+                                try {
+                                    initialMenu();
+                                } catch (ParseException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        });
+        tryagainButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                newframe.dispose();
+                                try {
+                                    option3_4();
+                                } catch (ParseException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        });
+        newframe.add(newpanel);
+        newframe.setPreferredSize(new Dimension(650, 350));
+        newframe.pack();
+        newframe.setLocationRelativeTo(null);
+        newframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        newframe.setVisible(true);
     }
 
     public void option3_5() throws ParseException {
