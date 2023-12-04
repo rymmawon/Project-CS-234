@@ -1,13 +1,13 @@
 import java.text.ParseException;
 import java.util.*;
 import java.lang.Math;
-import java.lang.reflect.Member;
 import java.text.SimpleDateFormat;
 import javax.swing.*; // For GUI components
 import java.awt.*; // For layout managers and basic GUI functionalities
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 
 
 
@@ -87,15 +87,15 @@ public class Menu extends JFrame {
             guests.add(newGuest);
         }
     }
-   public void generateMembers() {
-       String[] tiers = {"Basic", "Standard", "Premium"};
+    public void generateMembers() {
+        String[] tiers = {"Basic", "Standard", "Premium"};
         for(int i = 0; i < 16; i++)  {
-            Member newMembers = new Member(generateFirstName(), generateLastName(), generateRandomNumber(18, 100));
-            members.add(newMembers);
-            newMembers.setMemberTier(tiers[generateRandomNumber(1,3) - 1]);
+            Member newMember = new Member(generateFirstName(), generateLastName(), generateRandomNumber(18, 100));
+            members.add(newMember);
+            newMember.setMemberTier(tiers[generateRandomNumber(1,3) - 1]);
         }
     }
-
+    
     public void generateReservations() {
         for (Guest guest : guests) {
             Reservation newReservation = new Reservation();
@@ -162,7 +162,6 @@ public class Menu extends JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
                 | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
-            // Handle the exception appropriately
         }
     
         frame = new JFrame("Hotel Menu");
@@ -710,7 +709,10 @@ public class Menu extends JFrame {
         // Create buttons in a loop
         for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
-            buttons[i].setPreferredSize(new Dimension(750, 250));
+            buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
+            buttons[i].setPreferredSize(new Dimension(2150, 1550));
+            buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
+            buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
             panel.add(buttons[i]);
         }
     
@@ -1539,6 +1541,7 @@ public class Menu extends JFrame {
     }
     
     public void option3_4() throws ParseException {
+        JFrame firstnameframe = new JFrame("Guest Confirming");
         JFrame newframe = new JFrame("Guest Confirming");
         JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
         newframe.setSize(500, 300);
@@ -1548,6 +1551,7 @@ public class Menu extends JFrame {
         JTextField[] answerFields = new JTextField[questions.length];
         JButton submitButton = new JButton("Submit");
         JButton cancelButton = new JButton("Cancel");
+        JButton okaybutton = new JButton("ok");
         JButton tryagainButton = new JButton("Try again");
         String[] buttonLabels = {"First Name", "Last Name", "Age", "Phone number", "Main Menu", "Exit"};
         JButton[] buttons = new JButton[buttonLabels.length]; 
@@ -1563,6 +1567,7 @@ public class Menu extends JFrame {
             answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
             submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
             cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            okaybutton.setFont(new Font("Arial", Font.PLAIN, 20));
             tryagainButton.setFont(new Font("Arial", Font.PLAIN, 20));
         }
         newpanel.add(submitButton);
@@ -1580,6 +1585,16 @@ public class Menu extends JFrame {
                 
                 newframe.dispose();
                 panel.removeAll();
+                
+
+        JPanel fpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+
+        JLabel fquestion = new JLabel("Enter the Guest new first name: ");
+        JLabel lquestion = new JLabel("Enter the Guest new last name: ");
+        JLabel aquestion = new JLabel("Enter the Guest new Age: ");
+        JLabel pquestion = new JLabel("Enter the Guest new Phone Number: ");
+        JTextField firstNameField = new JTextField();
+        JButton firstNameButton = new JButton("Submit");
                
 
                  for (int i = 0; i < buttonLabels.length; i++) {
@@ -1592,45 +1607,143 @@ public class Menu extends JFrame {
         }
     
         buttons[0].addActionListener(o -> {
-            try {
-                option1_1();
-            } catch (ParseException ex) {
-                ex.printStackTrace();
-                
-            }
-        });
+
+        fpanel.add(fquestion);
+        fpanel.add(firstNameField);
+        fpanel.add(firstNameButton);
+        fpanel.add(cancelButton);
+
+       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
+       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
+       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
     
+        firstNameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fpanel.removeAll();
+            
+                
+        String firstName = firstNameField.getText();
+        guest.setFirstName(firstName);
+        notfound.setText("First Name has been changed to " + firstName);
+        fpanel.add(notfound);
+        fpanel.add(okaybutton);
+        firstnameframe.revalidate();
+        firstnameframe.repaint();
+        }});
+        firstnameframe.add(fpanel);
+        firstnameframe.setPreferredSize(new Dimension(650, 350));
+        firstnameframe.pack();
+        firstnameframe.setLocationRelativeTo(null);
+        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        firstnameframe.setVisible(true);
+        
+        });
         buttons[1].addActionListener(o -> {
-            try {
-                option1_2();
-            } catch (ParseException ex) {
-                ex.printStackTrace();
-            }
+        fpanel.add(lquestion);
+        fpanel.add(firstNameField);
+        fpanel.add(firstNameButton);
+        fpanel.add(cancelButton);
+
+       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
+       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
+       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+    
+        firstNameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fpanel.removeAll();
+            
+                
+        String firstName = firstNameField.getText();
+        guest.setLastName(firstName);
+        notfound.setText("Last Name has been changed to " + firstName);
+        fpanel.add(notfound);
+        fpanel.add(okaybutton);
+        firstnameframe.revalidate();
+        firstnameframe.repaint();
+            }});
+        firstnameframe.add(fpanel);
+        firstnameframe.setPreferredSize(new Dimension(650, 350));
+        firstnameframe.pack();
+        firstnameframe.setLocationRelativeTo(null);
+        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        firstnameframe.setVisible(true);
         });
     
         buttons[2].addActionListener(o -> {
-            try {
-                option1_3();
-            } catch (ParseException ex) {
-                ex.printStackTrace();
-            }
-        });
+        fpanel.add(aquestion);
+        fpanel.add(firstNameField);
+        fpanel.add(firstNameButton);
+        fpanel.add(cancelButton);
+
+       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
+       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
+       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
     
-        buttons[3].addActionListener(o -> {
+        firstNameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fpanel.removeAll();
+            
+                
+        int firstName = Integer.parseInt(firstNameField.getText());
+        guest.setAge(firstName);
+        notfound.setText("Age has been Updated to " + firstName);
+        fpanel.add(notfound);
+        fpanel.add(okaybutton);
+        firstnameframe.revalidate();
+        firstnameframe.repaint();
+            }});
+        firstnameframe.add(fpanel);
+        firstnameframe.setPreferredSize(new Dimension(650, 350));
+        firstnameframe.pack();
+        firstnameframe.setLocationRelativeTo(null);
+        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        firstnameframe.setVisible(true);
+        });
+     buttons[3].addActionListener(o -> {
+        fpanel.add(pquestion);
+        fpanel.add(firstNameField);
+        fpanel.add(firstNameButton);
+        fpanel.add(cancelButton);
+
+       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
+       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
+       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+    
+        firstNameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fpanel.removeAll();
+            
+                
+         String firstName = firstNameField.getText();
+        guest.setPhoneNumber(firstName);
+        notfound.setText("Phone Number has been Updated to " + firstName);
+        fpanel.add(notfound);
+        fpanel.add(okaybutton);
+        firstnameframe.revalidate();
+        firstnameframe.repaint();
+            }});
+        firstnameframe.add(fpanel);
+        firstnameframe.setPreferredSize(new Dimension(650, 350));
+        firstnameframe.pack();
+        firstnameframe.setLocationRelativeTo(null);
+        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        firstnameframe.setVisible(true);
+        });
+        buttons[4].addActionListener(o -> {
             try {
                 newframe.dispose();
-                frame.dispose();
                 initialMenu();
             } catch (ParseException p) {
                 p.printStackTrace();
             }
         });
     
-        buttons[4].addActionListener(o -> {
+        buttons[5].addActionListener(o -> {
             frame.dispose();
             newframe.dispose();
         });
-
+        frame.revalidate();
+        frame.repaint();
             }
 
         
@@ -1645,9 +1758,13 @@ public class Menu extends JFrame {
             newframe.revalidate();
             newframe.repaint();
         }   }
-        frame.revalidate();
-        frame.repaint();
+
             }});
+            okaybutton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                firstnameframe.dispose();
+                                newframe.dispose();
+                         } });
             cancelButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 newframe.dispose();
@@ -1698,8 +1815,8 @@ public class Menu extends JFrame {
         String firstName = in.nextLine();
         for (Guest guest : guests) {
             if (Objects.equals(lastName, guest.getLastName()) && Objects.equals(firstName, guest.getFirstName())) {
-                Member newMember = new Member(guest.getFirstName(), guest.getLastName(), guest.getAge());
-                members.add(newMember);
+              //  Member newMember = new Member(guest.getFirstName(), guest.getLastName(), guest.getAge());
+                //members.add(newMember);
             }
         }
         initialMenu();
@@ -1975,56 +2092,219 @@ public void option6_3() throws ParseException {
     panel.repaint();
 }
 
-    public  void  option6_4() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Employee last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Employee first name: ");
-        String firstName = in.nextLine();
-        System.out.println("Enter the Employee new information: ");
-        for (Employee employee : employees) {
-            if (Objects.equals(lastName, employee.getEmployeeLastName()) && Objects.equals(firstName, employee.getEmployeeFirstName())) {
-                System.out.println("What would you like to edit? ");
-                System.out.println("1. First Name");
-                System.out.println("2. Last Name");
-                System.out.println("3. Age");
-                System.out.println("4. Hourly Wage");
-                System.out.println("5. Hours Worked");
-                System.out.println("9. Main Menu");
-                System.out.println("0. Exit");
-                System.out.print("Enter your choice: ");
-                option = in.nextInt();
-                switch (option) {
-                    case 1:
-                      //  employee.setEmployeeFirstName();
-                        break;
-                    case 2:
-                     //   employee.setEmployeeLastName();
-                        break;
-                    case 3:
-                     //   employee.setAge();
-                        break;
-                    case 4:
-                       // employee.setHourlyWage();
-                        break;
-                    case 5:
-                       // employee.setHoursWorked();
-                        break;
-                    case 9:
-                        initialMenu();
-                        break;
-                    case 0:
-                        System.out.println("Bye");
-                        break;
-                    default:
-                        System.out.println("Invalid option");
-                        break;
+public void option6_4() throws ParseException {
+    JFrame Employeeframe = new JFrame("Employee Edititor");
+    JFrame newframe = new JFrame("Employee Confirming");
+    JPanel fpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+    JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+    newframe.setSize(500, 300);
 
+    String[] Labels = {"Enter the Employee last name: ", "Enter the Employee first name: "};
+    JLabel[] questions = new JLabel[Labels.length];
+    JTextField[] answerFields = new JTextField[questions.length];
+    JButton submitButton = new JButton("Submit");
+    JButton cancelButton = new JButton("Cancel");
+    JButton okaybutton = new JButton("ok");
+    String[] buttonLabels = {"First Name", "Last Name", "Age", "Hourly Wage", "Hours Worked", "Main Menu", "Exit"};
+    JButton[] buttons = new JButton[buttonLabels.length];
+    JTextArea notfound = new JTextArea();
+
+    for (int i = 0; i < questions.length; i++) {
+        JLabel label = new JLabel(Labels[i]);
+        newpanel.add(label);
+
+        answerFields[i] = new JTextField();
+        newpanel.add(answerFields[i]);
+        answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        okaybutton.setFont(new Font("Arial", Font.PLAIN, 20));
+    }
+    newpanel.add(submitButton);
+    newpanel.add(cancelButton);
+
+    submitButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String lastName = answerFields[0].getText();
+            String firstName = answerFields[1].getText();
+            for (Employee employee : employees) {
+                if (Objects.equals(lastName, employee.getEmployeeLastName()) && Objects.equals(firstName, employee.getEmployeeFirstName())) {
+                    newframe.dispose();
+                    panel.removeAll();
+
+                    
+
+                    for (int i = 0; i < buttonLabels.length; i++) {
+                        buttons[i] = new JButton(buttonLabels[i]);
+                        buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
+                        buttons[i].setPreferredSize(new Dimension(2150, 1550));
+                        buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
+                        buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
+                        panel.add(buttons[i]);
+                    }
+
+                    buttons[0].addActionListener(o -> {
+                        fpanel.add(new JLabel("Enter the Employee new first name: "));
+                        fpanel.add(answerFields[0]);
+                        fpanel.add(submitButton);
+                        fpanel.add(cancelButton);
+
+                        submitButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                fpanel.removeAll();
+                                String newFirstName = answerFields[0].getText();
+                                employee.setEmployeeFirstName(newFirstName);
+                                notfound.setText("First Name has been changed to " + newFirstName);
+                                fpanel.add(notfound);
+                                fpanel.add(okaybutton);
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                Employeeframe.revalidate();
+                                Employeeframe.repaint();
+
+                            }
+                        });
+                                Employeeframe.add(fpanel);
+                                Employeeframe.setPreferredSize(new Dimension(650, 350));
+                                Employeeframe.pack();
+                                Employeeframe.setLocationRelativeTo(null);
+                                Employeeframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                Employeeframe.setVisible(true);
+                    });
+
+                    buttons[1].addActionListener(o -> {
+                        fpanel.add(new JLabel("Enter the Employee new last name: "));
+                        fpanel.add(answerFields[1]);
+                        fpanel.add(submitButton);
+                        fpanel.add(cancelButton);
+
+                        submitButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                String newLastName = answerFields[1].getText();
+                                employee.setEmployeeLastName(newLastName);
+                                notfound.setText("Last Name has been changed to " + newLastName);
+                                fpanel.add(notfound);
+                                fpanel.add(okaybutton);
+                                newframe.revalidate();
+                                newframe.repaint();
+                            }
+                        });
+                    });
+
+                    buttons[2].addActionListener(o -> {
+                        fpanel.add(new JLabel("Enter the Employee new Age: "));
+                        fpanel.add(answerFields[2]);
+                        fpanel.add(submitButton);
+                        fpanel.add(cancelButton);
+
+                        submitButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                int newAge = Integer.parseInt(answerFields[2].getText());
+                                employee.setAge(newAge);
+                                notfound.setText("Age has been Updated to " + newAge);
+                                fpanel.add(notfound);
+                                fpanel.add(okaybutton);
+                                newframe.revalidate();
+                                newframe.repaint();
+                            }
+                        });
+                    });
+
+                    buttons[3].addActionListener(o -> {
+                        fpanel.add(new JLabel("Enter the Employee new Hourly Wage: "));
+                        fpanel.add(answerFields[3]);
+                        fpanel.add(submitButton);
+                        fpanel.add(cancelButton);
+
+                        submitButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                float newHourlyWage = Float.parseFloat(answerFields[3].getText());
+                                employee.setHourlyWage(newHourlyWage);
+                                notfound.setText("Hourly Wage has been Updated to " + newHourlyWage);
+                                fpanel.add(notfound);
+                                fpanel.add(okaybutton);
+                                newframe.revalidate();
+                                newframe.repaint();
+                            }
+                        });
+                    });
+
+                    buttons[4].addActionListener(o -> {
+                        fpanel.add(new JLabel("Enter the Employee new Hours Worked: "));
+                        fpanel.add(answerFields[4]);
+                        fpanel.add(submitButton);
+                        fpanel.add(cancelButton);
+
+                        submitButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                float newHoursWorked = Float.parseFloat(answerFields[4].getText());
+                                employee.setHoursWorked(newHoursWorked);
+                                notfound.setText("Hours Worked has been Updated to " + newHoursWorked);
+                                fpanel.add(notfound);
+                                fpanel.add(okaybutton);
+                                newframe.revalidate();
+                                newframe.repaint();
+                            }
+                        });
+                    });
+
+                    buttons[5].addActionListener(o -> {
+                        try {
+                            newframe.dispose();
+                            initialMenu();
+                        } catch (ParseException p) {
+                            p.printStackTrace();
+                        }
+                    });
+
+                    buttons[6].addActionListener(o -> {
+                        frame.dispose();
+                        newframe.dispose();
+                    });
+
+                    frame.revalidate();
+                    frame.repaint();
+                } else {
+                    newpanel.removeAll();
+                    notfound.setText("The Employee " + firstName + " " + lastName + " is not found");
+                    newpanel.add(notfound);
+                    cancelButton.setPreferredSize(new Dimension(5, 5));
+                    newpanel.add(cancelButton);
+                    newpanel.add(okaybutton);
+                    newframe.revalidate();
+                    newframe.repaint();
                 }
             }
         }
-        initialMenu();
-    }
+    });
+
+    okaybutton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            newframe.dispose();
+            Employeeframe.dispose();
+        }
+    });
+
+    cancelButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            newframe.dispose();
+            frame.dispose();
+            try {
+                initialMenu();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+    });
+
+    newframe.add(newpanel);
+    newframe.setPreferredSize(new Dimension(650, 350));
+    newframe.pack();
+    newframe.setLocationRelativeTo(null);
+    newframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    newframe.setVisible(true);
+}
+
     public void option6_5() throws ParseException {
         Scanner in = new Scanner(System.in);
         System.out.print("Enter the Employee last name: ");
