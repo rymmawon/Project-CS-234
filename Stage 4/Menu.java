@@ -2,17 +2,14 @@ import java.text.ParseException;
 import java.util.*;
 import java.lang.Math;
 import java.text.SimpleDateFormat;
-
-// for a more customizeable layout
-import javax.swing.*; // For GUI components
-import java.awt.*; // For layout managers and basic GUI functionalities
+import javax.swing.*; 
+import java.awt.*; 
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class Menu extends JFrame {
-    private int option;
     private ArrayList<Reservation> reservations;
     private ArrayList<Guest> guests;
     private ArrayList<Member> members;
@@ -183,9 +180,6 @@ public class Menu extends JFrame {
         JButton reportsButton = new JButton("Reports");
         JButton exitButton = new JButton("Exit");
     
-        // Add vertical glue before the buttons
-        panel.add(Box.createVerticalGlue());
-    
         // Add buttons to the panel
         for (JButton button : Arrays.asList(
                 reservationsButton, roomsButton, guestsButton, checkInButton,
@@ -266,6 +260,7 @@ public class Menu extends JFrame {
             buttons[i] = new JButton(buttonLabels[i]);
             buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
             buttons[i].setPreferredSize(new Dimension(2150, 1550));
+            buttons[i].setForeground(Color.BLUE);
             buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
             buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
             panel.add(buttons[i]);
@@ -905,7 +900,6 @@ public class Menu extends JFrame {
         });
     
         buttons[4].addActionListener(e -> {
-            System.out.println("Bye");
             System.exit(0);
         });
     
@@ -915,10 +909,13 @@ public class Menu extends JFrame {
     }
     
 
-    public void option1_1() throws ParseException {
+public void option1_1() throws ParseException {
         JFrame newframe = new JFrame("Reservation Adder");
         JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
         newframe.setSize(500, 300);
+        JFrame frame2 = new JFrame("Reservation Adder");
+        JPanel panel2 = new JPanel(new GridLayout(0, 2, 10, 10));
+        frame2.setSize(500, 300);
 
         String[] questions = {"Enter the Guest last name:", "Enter the Guest first name:", "Enter the number of people:", "Enter the Guest Phone Number:"};
         JTextField[] answerFields = new JTextField[questions.length];
@@ -935,7 +932,11 @@ public class Menu extends JFrame {
 
             answerFields[i] = new JTextField();
             newpanel.add(answerFields[i]);
+            label.setFont(new Font("Arial", Font.PLAIN, 20));
             answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
+            submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            submitButton2.setFont(new Font("Arial", Font.PLAIN, 20));
+            cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
         }
         newpanel.add(submitButton);
         newpanel.add(cancelButton);
@@ -943,21 +944,24 @@ public class Menu extends JFrame {
     
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                newpanel.removeAll();
+                newframe.dispose();
 
                 for (int i = 0; i < newquestions.length; i++) {
                 JLabel newlabel = new JLabel(newquestions[i]);
-                newpanel.add(newlabel);
+                panel2.add(newlabel);
 
                 newanswerFields[i] = new JTextField();
-                newpanel.add(newanswerFields[i]);
+                panel2.add(newanswerFields[i]);
+                newlabel.setFont(new Font("Arial", Font.PLAIN, 17));
                 newanswerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
             }
-                newpanel.add(submitButton2);
-            
+                panel2.add(submitButton2);
+                panel2.add(cancelButton);
 
                 submitButton2.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
+                        newframe.dispose();
+                        frame2.dispose();
 
                 String lastName = answerFields[0].getText();
                 String firstName = answerFields[1].getText();
@@ -965,17 +969,12 @@ public class Menu extends JFrame {
                 String phoneNum = answerFields[3].getText();
                 int age = Integer.parseInt(newanswerFields[0].getText());
                 int nights = Integer.parseInt(newanswerFields[1].getText());
-                
-                Guest names = new Guest();
-                names.setFirstName(firstName);
-                names.setLastName(lastName);
     
                 Reservation newReservation = new Reservation();
                 newReservation.setCheckInDate();
                 newReservation.setNights(nights);
                 newReservation.calculateCheckOutDate();
     
-                // Use a flag to track whether a matching guest is found
                 boolean guestFound = false;
     
                 for (Guest guest : guests) {
@@ -1015,8 +1014,12 @@ public class Menu extends JFrame {
             }
             }
         });
-        newpanel.revalidate();
-        newpanel.repaint();
+            frame2.add(panel2);
+            frame2.setPreferredSize(new Dimension(650, 350));
+            frame2.pack();
+            frame2.setLocationRelativeTo(null);
+            frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame2.setVisible(true);
     }
 });
 
@@ -1037,116 +1040,159 @@ public class Menu extends JFrame {
         newframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         newframe.setVisible(true);
     }
-    
     public void option1_2() throws ParseException {
-        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-        if (frame != null) {
             frame.dispose();
+            JFrame newframe = new JFrame("Reservation Search");
+            JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+            newframe.setSize(500, 300);
+            JFrame window = new JFrame("Reservation Found");
+            JPanel wood = new JPanel();
+            window.setSize(800, 300);
+            JTextArea newtitle = new JTextArea("\tGuest\t\tCheckIn Date\t\tCheckOut Date\tNights\tRoom\t\tPeople\n\n");
+            newtitle.setEditable(false);
+            newtitle.setFont(new Font("Arial", Font.PLAIN, 18));
+            
+            String[] Labels = {"Enter the Guest last name: ", "Enter the Guest first name: "};
+            JLabel[] questions = new JLabel[Labels.length];
+            JTextField[] answerFields = new JTextField[questions.length];
+            JButton submitButton = new JButton("Submit");
+            JButton cancelButton = new JButton("Cancel");
+            JButton okaybutton = new JButton("OK");
+            JButton tryagainButton = new JButton("Try again");
+            JTextArea outputTextArea = new JTextArea();
+
+
+            for (int i = 0; i < questions.length; i++) {
+                JLabel label = new JLabel(Labels[i]);
+                newpanel.add(label);
+
+                answerFields[i] = new JTextField();
+                newpanel.add(answerFields[i]);
+                label.setFont(new Font("Arial", Font.PLAIN, 20));
+                answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+                cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+                okaybutton.setFont(new Font("Arial", Font.PLAIN, 20));
+                tryagainButton.setFont(new Font("Arial", Font.PLAIN, 20));
+                outputTextArea.setFont(new Font("Arial", Font.PLAIN, 20));
+            }
+            newpanel.add(submitButton);
+            newpanel.add(cancelButton);
+            submitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    newpanel.removeAll();
+                    newpanel.setLayout(new BoxLayout(newpanel, BoxLayout.Y_AXIS));
+            String lastName = answerFields[0].getText();
+            String firstName = answerFields[1].getText();
+            boolean found = false;
+                for (Guest guest : guests) {
+        if (guest.getLastName().equals(lastName)) {
+                found = true;
         }
-    
-        JFrame newFrame = new JFrame("");
-        JPanel newpanel = new JPanel(null);
-        newFrame.setSize(500, 300);
-    
-        JTextField lastNameField = new JTextField(10);
-        JButton submitButton = new JButton("Submit");
-    
-        JTextArea outputTextArea = new JTextArea();
-        outputTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputTextArea);
-    
-        lastNameField.setBounds(10, 10, 150, 25);
-        submitButton.setBounds(10, 40, 80, 25);
-        scrollPane.setBounds(10, 70, 480, 150); 
-    
-        newpanel.add(new JLabel("Enter the Guest last name:"));
-        newpanel.getComponent(0).setBounds(10, 10, 200, 25);
-        newpanel.add(lastNameField);
-        newpanel.getComponent(1).setBounds(10, 40, 150, 25);
-        newpanel.add(submitButton);
-        newpanel.getComponent(2).setBounds(170, 40, 80, 25);
-    
-        submitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                newpanel.removeAll();
-                JButton Okaybutton = new JButton("Ok");
-                submitButton.setBounds(10, 40, 80, 25);
-    
-                String lastName = lastNameField.getText();
-                if (containsName(guests, lastName)) {
+
+            if (found) {
                     StringBuilder combinedReservations = new StringBuilder();
                     for (Reservation reservation : reservations) {
                         if (Objects.equals(lastName, reservation.getCustomer().getLastName())) {
+                            newframe.dispose();
                             combinedReservations.append(reservation.printReservation());
                             combinedReservations.append("\n");
+                            wood.add((newtitle), BorderLayout.NORTH);
+                            okaybutton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                            wood.add(outputTextArea);
+                            wood.add(okaybutton, BorderLayout.SOUTH);                            
                         }
                     }
                     outputTextArea.setText(combinedReservations.toString());
-                } else {
-                    outputTextArea.setText("There is no Guest with this last name.\n");
+                }}if(!found) {
+                    outputTextArea.setText("There is no Guest with that Reservation.\n");
+                        tryagainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        newpanel.add(outputTextArea);
+                        newpanel.add(tryagainButton, BorderLayout.SOUTH);  
+                    newframe.revalidate();
+                    newframe.repaint();                 
+                }   
+                    window.add(wood);
+                    window.setPreferredSize(new Dimension(1300, 450));
+                    window.pack();
+                    window.setLocationRelativeTo(null);
+                    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    window.setVisible(true);  
                 }
-    
-                newpanel.add(scrollPane);
-                scrollPane.setBounds(10, 70, 480, 150); // Adjust the size if needed
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    
-                newpanel.add(Okaybutton);
-                newpanel.getComponent(1).setBounds(170, 40, 80, 25);
-                Okaybutton.addActionListener(new ActionListener() {
+            });   
+                        okaybutton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        newFrame.dispose();
                         try {
+                            window.dispose();
+                            newframe.dispose();
+                            frame.dispose();
+                        option1_2();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
+                tryagainButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            newframe.dispose();
+                            frame.dispose();
+                            option1_2();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+                            cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            newframe.dispose();
+                            frame.dispose();
                             initialMenu();
                         } catch (ParseException ex) {
                             ex.printStackTrace();
                         }
                     }
                 });
-    
-                newpanel.revalidate();
-                newpanel.repaint();
-            }
-    
-            boolean containsName(java.util.List<Guest> list, String name) {
-                return list.stream().anyMatch(p -> p.getLastName().equals(name));
-            }
-        });
-    
-        newFrame.add(newpanel);
-        newFrame.setPreferredSize(new Dimension(550, 350));
-        newFrame.pack();
-        newFrame.setLocationRelativeTo(null);
-        newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        newFrame.setVisible(true);
-    }
-    
-
+            newframe.add(newpanel);
+            newframe.setPreferredSize(new Dimension(650, 350));
+            newframe.pack();
+            newframe.setLocationRelativeTo(null);
+            newframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            newframe.setVisible(true);
+        }
         public void option1_3() throws ParseException {
-            JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-            if (frame != null) {
                 frame.dispose();
-            }
         
             JTextArea outputTextArea = new JTextArea();
-            JFrame newFrame = new JFrame("");
+            JTextArea title = new JTextArea();
+            JFrame newFrame = new JFrame("All Reservations");
             JPanel newpanel = new JPanel(new BorderLayout());
             JButton okayButton = new JButton("OK");
             newFrame.setSize(500, 300);
-        
+            title.setText("\tGuest\t\tCheckIn Date\t\tCheckOut Date\tNights\tRoom\t\tPeople\n\n");
+            title.setEditable(false);
+            title.setFont(new Font("Arial", Font.PLAIN, 18));
+            newpanel.add((title), BorderLayout.NORTH);
             StringBuilder combinedReservations = new StringBuilder();
             for (Reservation reservation : reservations) {
                 combinedReservations.append(reservation.printReservation());
                 combinedReservations.append("\n");
             }
         
-            outputTextArea.setText("\t\tGuest\t\tCheckIn Date\t\tCheckOut Date\t\tNights\t\t\tRoom\t\t\tPeople\n\n" + combinedReservations.toString());
+            outputTextArea.setText( combinedReservations.toString());
+            outputTextArea.setFont(new Font("Arial", Font.PLAIN, 18));
+            okayButton.setFont(new Font("Arial", Font.PLAIN, 25));
             outputTextArea.setEditable(false);
         
-            newpanel.add(new JScrollPane(outputTextArea), BorderLayout.CENTER);//scroll wheel to navigate
-            
+            JScrollPane pane = new JScrollPane();
+            pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            pane.setViewportView(outputTextArea);
+            newpanel.add(pane);
             JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             buttonPanel.add(okayButton);
-            newpanel.add(buttonPanel, BorderLayout.EAST);
+           newpanel.add(buttonPanel, BorderLayout.EAST);
         
             okayButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -1159,7 +1205,7 @@ public class Menu extends JFrame {
                 }
             });
             newFrame.add(newpanel);
-            newFrame.setPreferredSize(new Dimension(1500, 1300));
+            newFrame.setPreferredSize(new Dimension(1450, 1300));
             newFrame.pack();
             newFrame.setLocationRelativeTo(null);
             newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1235,11 +1281,19 @@ public class Menu extends JFrame {
             JTextField roomNumField = new JTextField(10);
             JButton submitButton = new JButton("Submit");
             JTextArea outputTextArea = new JTextArea();
+            JLabel roomnumlabel = new JLabel("Enter the Room Number:");
             outputTextArea.setEditable(false);
             JButton okayButton = new JButton("Ok");
             JButton cancelButton = new JButton("Cancel");
+
+            okayButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            roomNumField.setFont(new Font("Arial", Font.PLAIN, 20));
+            roomnumlabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            outputTextArea.setFont(new Font("Arial", Font.PLAIN, 20));
+            submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
         
-            resultPanel.add(new JLabel("Enter the Room number: "));
+            resultPanel.add(roomnumlabel);
             resultPanel.add(roomNumField);
             resultPanel.add(submitButton);
         
@@ -1256,8 +1310,7 @@ public class Menu extends JFrame {
                         for (Room room : rooms) {
                             if (room.getRoomNumber() == num) {
                                  resultPanel.remove(cancelButton);
-                                String outcome = "Room " + room.getRoomNumber() + " is " + room.getRoomStatus();
-                                outputTextArea.setText(outcome);
+                                outputTextArea.setText("Room " + room.getRoomNumber() + " is " + room.getRoomStatus());
                                 roomFound = true;
                                 okayButton.addActionListener(new ActionListener() {
                                     public void actionPerformed(ActionEvent e) {
@@ -1314,42 +1367,68 @@ public class Menu extends JFrame {
         }
            
         public void option2_3() throws ParseException {
-            JFrame resultFrame = new JFrame("Room Number");
+            JFrame resultFrame = new JFrame("Confirm Room");
             JPanel resultPanel = new JPanel(new FlowLayout());
             resultFrame.setSize(500, 300);
-        
+
+            JFrame modifyFrame = new JFrame("Room Modify");
+
             JTextField roomNumField = new JTextField(10);
             JButton submitButton = new JButton("Submit");
+            JButton priceButton = new JButton("Submit");
             JButton cancelButton = new JButton("Cancel");
+            JButton okayButton = new JButton("Okay");
+            JButton tryagainButton = new JButton("Try Again");
             JTextArea outputTextArea = new JTextArea();
-            resultPanel.add(new JLabel("Enter the Room number: "));
+            JLabel confirm = new JLabel("Enter the Room number: ");
+            JLabel priceLabel = new JLabel("Enter the price for the room in $: ");
+            JLabel bedsizeLabel = new JLabel("What is the new bed size");
+            JLabel bednumLabel = new JLabel("Enter the amount of beds for the room");
+            String[] bedbuttons = {"1","2","King","Queen"};
+            JTextField roomPriceTextField = new JTextField();
+            bedsizeLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            bednumLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            priceLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+            roomPriceTextField.setFont(new Font("Arial", Font.PLAIN, 20));
+            outputTextArea.setFont(new Font("Arial", Font.PLAIN, 20));
+            roomPriceTextField.setPreferredSize(new Dimension(150, roomPriceTextField.getPreferredSize().height));           
+            roomNumField.setFont(new Font("Arial", Font.PLAIN, 20));
+            submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            tryagainButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            okayButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            okayButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            tryagainButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            priceButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            outputTextArea.setFont(new Font("Arial", Font.PLAIN, 20));
+            confirm.setFont(new Font("Arial", Font.PLAIN, 20));
+            outputTextArea.setEditable(false);
+            resultPanel.add(confirm);
             resultPanel.add(roomNumField);
             resultPanel.add(submitButton);
             resultPanel.add(cancelButton);
         
             submitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    int num;
-                    try {
-                        num = Integer.parseInt(roomNumField.getText()); // convert to int
-                    } catch (NumberFormatException ex) {
-                        ex.printStackTrace();
-                        return;
-                    }
-        
+                    int num = Integer.parseInt(roomNumField.getText()); 
                     boolean roomFound = false;
         
-                    for (Room room : rooms) {
-                        if (Objects.equals(room.getRoomNumber(), num)) {
-                            roomFound = true;
-        
-                            resultFrame.dispose();
-                            panel.removeAll();
+                for (Room room : rooms) {
+                    if (Objects.equals(room.getRoomNumber(), num)) {
+                        roomFound = true;
+                        resultFrame.dispose();
+                        resultFrame.setVisible(false);
+                        panel.removeAll();
         
                             String[] buttonLabels = {"Edit Bed Size", "Edit Bed Number", "Edit Room Price", "Change Room Status", "Main Menu", "Exit"};
                             JButton[] buttons = new JButton[buttonLabels.length];
+                            JButton[] bedbutton = new JButton[bedbuttons.length];
         
-                            // Create buttons in a loop
+                            for (int i = 0; i < bedbuttons.length; i++) {
+                                    bedbutton[i] = new JButton(bedbuttons[i]);
+                                    bedbutton[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                                    bedbutton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+                                }
                             for (int i = 0; i < buttonLabels.length; i++) {
                                     buttons[i] = new JButton(buttonLabels[i]);
                                     buttons[i].setBorder(new EmptyBorder(10, 100, 10, 800));
@@ -1357,22 +1436,154 @@ public class Menu extends JFrame {
                                     buttons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the button horizontally
                                     buttons[i].setFont(new Font("Arial", Font.PLAIN, 30));
                                     panel.add(buttons[i]);
-                                // Add action listeners to the buttons
                                 switch (i) {
                                     case 0:
-                                        buttons[i].addActionListener(e1 -> room.setBedSize());
-                                        break;
+                                        buttons[i].addActionListener(new ActionListener() { 
+                                            public void actionPerformed(ActionEvent e) {
+                                            resultPanel.removeAll();
+
+                                            resultPanel.add(bedsizeLabel);
+                                            resultPanel.add(bedbutton[2]);
+                                            resultPanel.add(bedbutton[3]);
+                                        
+                                            bedbutton[2].addActionListener(new ActionListener() {
+                                                public void actionPerformed(ActionEvent e) {
+                                                    resultPanel.removeAll();
+                                                        String bedSize = "King";
+                                                        room.setBedSize(bedSize);
+                                                        outputTextArea.setText("Bed Size now set to " + bedSize);
+                                                        resultPanel.add(outputTextArea);
+                                                        resultPanel.add(okayButton, BorderLayout.SOUTH);
+                                                        resultPanel.revalidate();
+                                                        resultPanel.repaint();
+                                                }
+                                            });
+                                             bedbutton[3].addActionListener(new ActionListener() {
+                                                public void actionPerformed(ActionEvent e) {
+                                                    resultPanel.removeAll();
+                                                        String bedSize = "Queen";
+                                                        room.setBedSize(bedSize);
+                                                        outputTextArea.setText("Bed Size now set to " + bedSize);
+                                                        resultPanel.add(outputTextArea);
+                                                        resultPanel.add(okayButton, BorderLayout.SOUTH);
+                                                        resultPanel.revalidate();
+                                                        resultPanel.repaint();
+                                                }
+                                            });
+                                        resultPanel.revalidate();
+                                        resultPanel.repaint();
+                                        modifyFrame.add(resultPanel);
+                                        modifyFrame.setPreferredSize(new Dimension(500, 300));
+                                        modifyFrame.pack();
+                                        modifyFrame.setLocationRelativeTo(null);
+                                        modifyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        modifyFrame.setVisible(true);
+                                  }  });
+                                         break;
                                     case 1:
-                                        buttons[i].addActionListener(e1 -> room.setBedNumber());
-                                        break;
+                                        buttons[i].addActionListener(new ActionListener() { 
+                                            public void actionPerformed(ActionEvent e) {
+                                            resultPanel.removeAll();
+
+                                            resultPanel.add(bednumLabel);
+                                            resultPanel.add(bedbutton[0]);
+                                            resultPanel.add(bedbutton[1]);
+                                        
+                                            bedbutton[0].addActionListener(new ActionListener() {
+                                                public void actionPerformed(ActionEvent e) {
+                                                    resultPanel.removeAll();
+                                                        int bedNumber = 1;
+                                                        room.setBedNumber(bedNumber);
+                                                        outputTextArea.setText("Bed Number now set to " + bedNumber);
+                                                        resultPanel.add(outputTextArea);
+                                                        resultPanel.add(okayButton, BorderLayout.SOUTH);
+                                                        resultPanel.revalidate();
+                                                        resultPanel.repaint();
+                                                }
+                                            });
+                                             bedbutton[1].addActionListener(new ActionListener() {
+                                                public void actionPerformed(ActionEvent e) {
+                                                    resultPanel.removeAll();
+                                                        int bedNumber = 2;
+                                                        room.setBedNumber(bedNumber);
+                                                        outputTextArea.setText("Bed Number now set to " + bedNumber);
+                                                        resultPanel.add(outputTextArea);
+                                                        resultPanel.add(okayButton, BorderLayout.SOUTH);
+                                                        resultPanel.revalidate();
+                                                        resultPanel.repaint();
+                                                }
+                                            });
+                                        resultPanel.revalidate();
+                                        resultPanel.repaint();
+                                        modifyFrame.add(resultPanel);
+                                        modifyFrame.setPreferredSize(new Dimension(500, 300));
+                                        modifyFrame.pack();
+                                        modifyFrame.setLocationRelativeTo(null);
+                                        modifyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        modifyFrame.setVisible(true);
+                                  }  });
+                                         break;
                                     case 2:
-                                        buttons[i].addActionListener(e1 -> room.changeRoomPrice());
-                                        break;
+                                        buttons[i].addActionListener(new ActionListener() { 
+                                            public void actionPerformed(ActionEvent e) {
+                                            resultPanel.removeAll();
+                                            
+                                            
+
+                                            resultPanel.add(priceLabel);
+                                            resultPanel.add(roomPriceTextField);
+                                            resultPanel.add(priceButton);
+                                            resultPanel.add(cancelButton);
+                                        
+                                            priceButton.addActionListener(new ActionListener() {
+                                                public void actionPerformed(ActionEvent e) {
+                                                    resultPanel.removeAll();
+                                                    try {
+                                                        double roomPrice = Double.parseDouble(roomPriceTextField.getText());
+                                                        room.setRoomPrice(roomPrice);
+                                                        outputTextArea.setText("Okay, room price is now set to $" + roomPrice);
+                                                        resultPanel.add(outputTextArea);
+                                                        resultPanel.add(okayButton, BorderLayout.SOUTH);
+                                                        resultPanel.revalidate();
+                                                        resultPanel.repaint();
+                                                    } catch (NumberFormatException ex) {
+                                                        outputTextArea.setText("Invalid input. Please enter a valid number.");
+                                                        resultPanel.add(outputTextArea);
+                                                        resultPanel.revalidate();
+                                                        resultPanel.repaint();
+                                                    }
+                                                }
+                                            });
+                                        resultPanel.revalidate();
+                                        resultPanel.repaint();
+                                        modifyFrame.add(resultPanel);
+                                        modifyFrame.setPreferredSize(new Dimension(500, 300));
+                                        modifyFrame.pack();
+                                        modifyFrame.setLocationRelativeTo(null);
+                                        modifyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        modifyFrame.setVisible(true);
+                                  }  });
+                                         break;
                                     case 3:
                                         buttons[i].addActionListener(e1 -> {
+                                            resultPanel.removeAll();
                                             if (Objects.equals(room.getRoomStatus(), "Available")) {
                                                 room.setRoomStatus("Reserved");
+                                                outputTextArea.setText("Okay, room " + num + " is Reserved now");
+                                            }else{
+                                            room.setRoomStatus("Available");    
+                                            outputTextArea.setText("Okay, room " + num + " is Available now");
                                             }
+                                            resultPanel.add(outputTextArea);
+                                            resultPanel.add(okayButton,BorderLayout.SOUTH);
+                                            resultPanel.revalidate();
+                                            resultPanel.repaint();
+                                            modifyFrame.add(resultPanel);
+                                            modifyFrame.setPreferredSize(new Dimension(500, 300));
+                                            modifyFrame.pack();
+                                            modifyFrame.setLocationRelativeTo(null);
+                                            modifyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                            modifyFrame.setVisible(true);
                                         });
                                         break;
                                     case 4:
@@ -1389,30 +1600,46 @@ public class Menu extends JFrame {
                                     case 5:
                                         buttons[i].addActionListener(e1 -> {
                                             resultFrame.dispose();
+                                            frame.dispose();
                                             System.exit(0);
                                         });
+                                        //rooms.add(modifyRoom);
                                         break;
                                 }
         
-                                // Add buttons to the panel
-                                panel.add(buttons[i]);
+                                
                             }
-        
-                            // Revalidate and repaint the panel
-                            panel.revalidate();
-                            panel.repaint();
+                                        panel.revalidate();
+                                        panel.repaint();                           
                             return;
-                        }else
+                    }    }if (!roomFound){
                     
                     resultPanel.removeAll();
                     outputTextArea.setText("Room " + num + " not found");
-                    JButton okayButton = new JButton("Okay");
                     resultPanel.add(outputTextArea);
-                    resultPanel.add(okayButton);
-                    okayButton.addActionListener(new ActionListener() {
+                    resultPanel.add(tryagainButton);
+                        }
+                    
+
+                
+                    resultPanel.revalidate();
+                    resultPanel.repaint();
+                    panel.revalidate();
+                    panel.repaint();
+                }
+            });
+            okayButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
+                            resultPanel.removeAll();
                             resultFrame.dispose();
-                            frame.dispose();
+                            modifyFrame.dispose();
+                        }
+                    });
+            tryagainButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            resultPanel.removeAll();
+                            resultFrame.dispose();
+                            modifyFrame.dispose();
                             try {
                                 option2_3();
                             } catch (ParseException ex) {
@@ -1420,15 +1647,6 @@ public class Menu extends JFrame {
                             }
                         }
                     });
-                
-                    // Revalidate and repaint the panel
-                    resultPanel.revalidate();
-                    resultPanel.repaint();
-                    panel.revalidate();
-                    panel.repaint();
-                }
-                }
-            });
             cancelButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     resultFrame.dispose();
@@ -1466,7 +1684,7 @@ public class Menu extends JFrame {
 
         
             // Setting the font size and style
-            Font labelFont = new Font("Arial", Font.PLAIN, 13); // Adjust the font size as needed
+            Font labelFont = new Font("Arial", Font.PLAIN, 13);
             label.setFont(labelFont);
             // Get the text area from the JScrollPane's viewport
             JTextArea textArea = new JTextArea(finalResult);
@@ -1506,9 +1724,100 @@ public class Menu extends JFrame {
         }
         
     public void option3_1() throws ParseException {
-        Guest newGuest = new Guest();
-        guests.add(newGuest);
-        initialMenu();
+       JFrame newFrame = new JFrame("Guest adder");
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        newFrame.setSize(750, 450);
+        JPanel inputPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        mainPanel.setPreferredSize(new Dimension(550, 425));
+        JTextField lastNameField = new JTextField(10);
+        JTextField firstNameField = new JTextField(10);
+        JTextField ageField = new JTextField(10);
+        JTextField hourlyWageField = new JTextField(10);
+        JTextField hoursWorkedField = new JTextField(10);
+        JButton submitButton = new JButton("Submit");
+        JButton cancelButton = new JButton("Cancel");
+        JButton okayButton = new JButton("Ok");
+        String[] questions = {"Enter the Guest first Name: ", "Enter the Guest last name: ", "Enter the Guest age: ", "Enter the Guest Phone Number: "};
+        JTextField[] answerFields = new JTextField[questions.length];
+    
+        JTextArea outputTextArea = new JTextArea();
+        outputTextArea.setEditable(false);
+
+                for (int i = 0; i < questions.length; i++) {
+            JLabel label = new JLabel(questions[i]);
+            label.setFont(new Font("Arial", Font.PLAIN, 20));
+            inputPanel.add(label);
+
+            answerFields[i] = new JTextField();
+            inputPanel.add(answerFields[i]);
+            answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
+            submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            okayButton.setFont(new Font("Arial", Font.PLAIN, 20));
+            outputTextArea.setFont(new Font("Arial", Font.PLAIN, 20));
+        }
+    
+        inputPanel.add(submitButton);
+        inputPanel.add(cancelButton);
+    
+        mainPanel.add(inputPanel, BorderLayout.CENTER);
+    submitButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            Guest guest = new Guest();
+            inputPanel.removeAll();
+            buttonPanel.removeAll();
+            String guestLastName = answerFields[1].getText();
+            String guestFirstName = answerFields[0].getText();
+            int guestAge = Integer.parseInt(answerFields[2].getText());
+            String phoneNum = answerFields[3].getText();
+
+            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            outputTextArea.setText("Guest " + guestFirstName + " " + guestLastName + " has been added.");
+            
+            mainPanel.add(outputTextArea);
+            mainPanel.add(okayButton);
+            guest.setFirstName(guestFirstName);
+            guest.setLastName(guestLastName);
+            guest.setAge(guestAge);
+            guest.setPhoneNumber(phoneNum);
+            guests.add(guest);
+            okayButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        newFrame.dispose();
+                        frame.dispose();
+                        initialMenu();
+                    } catch (ParseException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            buttonPanel.revalidate();
+            buttonPanel.repaint();
+            inputPanel.revalidate();
+            inputPanel.repaint();
+        }
+    });
+
+    cancelButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            try {
+                newFrame.dispose();
+                frame.dispose();
+                initialMenu();
+            } catch (ParseException ex) {
+                ex.printStackTrace();
+            }
+        }
+    });
+
+    newFrame.add(mainPanel);
+    newFrame.setPreferredSize(new Dimension(750, 450));
+    newFrame.pack();
+    newFrame.setLocationRelativeTo(null);
+    newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    newFrame.setVisible(true);
     }
     public void option3_2() throws ParseException {
         frame.dispose();
@@ -1636,7 +1945,7 @@ public class Menu extends JFrame {
         title.setEditable(false);
     
         // Setting the front size and style
-        title.setFont(new Font("Arial", Font.PLAIN, 19));
+        title.setFont(new Font("Arial", Font.PLAIN, 20));
     
         panel.add(title);
     
@@ -1668,6 +1977,7 @@ public class Menu extends JFrame {
     }
     
     public void option3_4() throws ParseException {
+        JFrame guestframe = new JFrame("Guest Edititor");
         JFrame firstnameframe = new JFrame("Guest Confirming");
         JFrame newframe = new JFrame("Guest Confirming");
         JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
@@ -1691,6 +2001,7 @@ public class Menu extends JFrame {
 
             answerFields[i] = new JTextField();
             newpanel.add(answerFields[i]);
+            label.setFont(new Font("Arial", Font.PLAIN, 20));
             answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
             submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
             cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -1712,7 +2023,17 @@ public class Menu extends JFrame {
                 
                 newframe.dispose();
                 panel.removeAll();
-                
+                JPanel buttonpanel = new JPanel(new FlowLayout(FlowLayout.CENTER));// new panel for a better layout
+                JTextArea result_messasge = new JTextArea();                
+         String[] submitButtonl = {"Submit","Submit","Submit","Submit","Submit"};// all look the same with different purposes
+                JButton[] submitButtons = new JButton[submitButtonl.length];
+                 for (int i = 0; i < submitButtonl.length; i++) {
+                        submitButtons[i] = new JButton(submitButtonl[i]);
+                        submitButtons[i].setAlignmentX(Component.CENTER_ALIGNMENT); // Center the buttons horizontally
+                        submitButtons[i].setFont(new Font("Arial", Font.PLAIN, 20));
+                        submitButtons[i].setPreferredSize(new Dimension(150, 40));
+                        cancelButton.setPreferredSize(new Dimension(150, 40));
+                    }
 
         JPanel fpanel = new JPanel(new GridLayout(0, 2, 10, 10));
 
@@ -1720,9 +2041,16 @@ public class Menu extends JFrame {
         JLabel lquestion = new JLabel("Enter the Guest new last name: ");
         JLabel aquestion = new JLabel("Enter the Guest new Age: ");
         JLabel pquestion = new JLabel("Enter the Guest new Phone Number: ");
-        JTextField firstNameField = new JTextField();
-        JButton firstNameButton = new JButton("Submit");
-               
+        JTextField guestAge = new JTextField();
+        JTextField phonenum = new JTextField();
+        fquestion.setFont(new Font("Arial", Font.PLAIN, 20));
+        lquestion.setFont(new Font("Arial", Font.PLAIN, 20));
+        aquestion.setFont(new Font("Arial", Font.PLAIN, 20));
+        pquestion.setFont(new Font("Arial", Font.PLAIN, 20));
+        guestAge.setFont(new Font("Arial", Font.PLAIN, 20));
+        phonenum.setFont(new Font("Arial", Font.PLAIN, 20));
+        cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        result_messasge.setFont(new Font("Arial", Font.PLAIN, 20));
 
                  for (int i = 0; i < buttonLabels.length; i++) {
             buttons[i] = new JButton(buttonLabels[i]);
@@ -1733,162 +2061,199 @@ public class Menu extends JFrame {
             panel.add(buttons[i]);
         }
     
-        buttons[0].addActionListener(o -> {
+         buttons[0].addActionListener(o -> {
+                        buttonpanel.removeAll();
+                        buttonpanel.add(submitButtons[0]);
+                        buttonpanel.add(cancelButton);
+                        fpanel.removeAll();
+                        fpanel.setLayout(new GridLayout(0, 1, 10, 10));// change it back after an item is changed
+                        fpanel.add(fquestion);
+                        fpanel.add(answerFields[1]); 
+                        fpanel.add(buttonpanel);
+                        submitButtons[0].addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                fpanel.removeAll();
+                                buttonpanel.removeAll();
+                                fpanel.setLayout(new GridLayout(0, 1, 10, 10));
+                                String newFirstName = answerFields[1].getText();
+                                guest.setFirstName(newFirstName);
+                                result_messasge.setText("First Name has been changed");
+                                fpanel.add(result_messasge);
+                                okaybutton.setPreferredSize(new Dimension(80, 40));
+                                buttonpanel.add(okaybutton);
+                                fpanel.add(buttonpanel);
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();                                
+                                fpanel.revalidate();
+                                fpanel.repaint();
 
-        fpanel.add(fquestion);
-        fpanel.add(firstNameField);
-        fpanel.add(firstNameButton);
-        fpanel.add(cancelButton);
+                            }
+                        });                              
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                guestframe.add(fpanel);
+                                guestframe.setPreferredSize(new Dimension(650, 350));
+                                guestframe.pack();
+                                guestframe.setLocationRelativeTo(null);
+                                guestframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                guestframe.setVisible(true);
+                    });
 
-       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
-       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
-       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
-    
-        firstNameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fpanel.removeAll();
-            
-                
-        String firstName = firstNameField.getText();
-        guest.setFirstName(firstName);
-        notfound.setText("First Name has been changed to " + firstName);
-        fpanel.add(notfound);
-        fpanel.add(okaybutton);
-        firstnameframe.revalidate();
-        firstnameframe.repaint();
-        }});
-        firstnameframe.add(fpanel);
-        firstnameframe.setPreferredSize(new Dimension(650, 350));
-        firstnameframe.pack();
-        firstnameframe.setLocationRelativeTo(null);
-        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        firstnameframe.setVisible(true);
-        
-        });
-        buttons[1].addActionListener(o -> {
-        fpanel.add(lquestion);
-        fpanel.add(firstNameField);
-        fpanel.add(firstNameButton);
-        fpanel.add(cancelButton);
+                    buttons[1].addActionListener(o -> {
+                        buttonpanel.removeAll();
+                        buttonpanel.add(submitButtons[1]);
+                        buttonpanel.add(cancelButton);
+                        fpanel.removeAll();
+                        fpanel.setLayout(new GridLayout(0, 1, 10, 10));// change it back after an item is changed
+                        fpanel.add(lquestion);
+                        fpanel.add(answerFields[0]);
+                        fpanel.add(buttonpanel);
 
-       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
-       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
-       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
-    
-        firstNameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fpanel.removeAll();
-            
-                
-        String firstName = firstNameField.getText();
-        guest.setLastName(firstName);
-        notfound.setText("Last Name has been changed to " + firstName);
-        fpanel.add(notfound);
-        fpanel.add(okaybutton);
-        firstnameframe.revalidate();
-        firstnameframe.repaint();
-            }});
-        firstnameframe.add(fpanel);
-        firstnameframe.setPreferredSize(new Dimension(650, 350));
-        firstnameframe.pack();
-        firstnameframe.setLocationRelativeTo(null);
-        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        firstnameframe.setVisible(true);
-        });
-    
-        buttons[2].addActionListener(o -> {
-        fpanel.add(aquestion);
-        fpanel.add(firstNameField);
-        fpanel.add(firstNameButton);
-        fpanel.add(cancelButton);
+                        submitButtons[1].addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                fpanel.removeAll();
+                                buttonpanel.removeAll();
+                                fpanel.setLayout(new GridLayout(0, 1, 10, 10));
+                                String newlastName = answerFields[0].getText();
+                                guest.setLastName(newlastName);
+                                result_messasge.setText("Last Name has been changed");
+                                fpanel.add(result_messasge);
+                                okaybutton.setPreferredSize(new Dimension(80, 40));
+                                buttonpanel.add(okaybutton);
+                                fpanel.add(buttonpanel);
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                }
+                        });
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                guestframe.add(fpanel);
+                                guestframe.setPreferredSize(new Dimension(650, 350));
+                                guestframe.pack();
+                                guestframe.setLocationRelativeTo(null);
+                                guestframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                guestframe.setVisible(true);
+                    });
 
-       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
-       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
-       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
-    
-        firstNameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fpanel.removeAll();
-            
-                
-        int firstName = Integer.parseInt(firstNameField.getText());
-        guest.setAge(firstName);
-        notfound.setText("Age has been Updated to " + firstName);
-        fpanel.add(notfound);
-        fpanel.add(okaybutton);
-        firstnameframe.revalidate();
-        firstnameframe.repaint();
-            }});
-        firstnameframe.add(fpanel);
-        firstnameframe.setPreferredSize(new Dimension(650, 350));
-        firstnameframe.pack();
-        firstnameframe.setLocationRelativeTo(null);
-        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        firstnameframe.setVisible(true);
-        });
-     buttons[3].addActionListener(o -> {
-        fpanel.add(pquestion);
-        fpanel.add(firstNameField);
-        fpanel.add(firstNameButton);
-        fpanel.add(cancelButton);
+                    buttons[2].addActionListener(o -> {
+                        buttonpanel.removeAll();
+                        buttonpanel.add(submitButtons[2]);
+                        buttonpanel.add(cancelButton);
+                        fpanel.removeAll();
+                        fpanel.setLayout(new GridLayout(0, 1, 10, 10));// change it back after an item is changed
+                        fpanel.add(aquestion);
+                        fpanel.add(guestAge);
+                        fpanel.add(buttonpanel);
 
-       firstNameButton.setFont(new Font("Arial", Font.PLAIN, 20));
-       firstNameField.setFont(new Font("Arial", Font.PLAIN, 20));
-       cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
-    
-        firstNameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fpanel.removeAll();
-            
-                
-         String firstName = firstNameField.getText();
-        guest.setPhoneNumber(firstName);
-        notfound.setText("Phone Number has been Updated to " + firstName);
-        fpanel.add(notfound);
-        fpanel.add(okaybutton);
-        firstnameframe.revalidate();
-        firstnameframe.repaint();
-            }});
-        firstnameframe.add(fpanel);
-        firstnameframe.setPreferredSize(new Dimension(650, 350));
-        firstnameframe.pack();
-        firstnameframe.setLocationRelativeTo(null);
-        firstnameframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        firstnameframe.setVisible(true);
-        });
-        buttons[4].addActionListener(o -> {
-            try {
-                newframe.dispose();
-                initialMenu();
-            } catch (ParseException p) {
-                p.printStackTrace();
-            }
-        });
-    
-        buttons[5].addActionListener(o -> {
-            frame.dispose();
-            newframe.dispose();
-        });
-        frame.revalidate();
-        frame.repaint();
-            }
+                        submitButtons[2].addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                fpanel.removeAll();
+                                buttonpanel.removeAll();
+                                fpanel.setLayout(new GridLayout(0, 1, 10, 10));
+                                int newAge = Integer.parseInt(guestAge.getText());
+                                guest.setAge(newAge);
+                                result_messasge.setText("Age has been Updated");
+                                fpanel.add(result_messasge);
+                                okaybutton.setPreferredSize(new Dimension(80, 40));
+                                buttonpanel.add(okaybutton);
+                                fpanel.add(buttonpanel);
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                }
+                        });                   
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();   
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                guestframe.add(fpanel);
+                                guestframe.setPreferredSize(new Dimension(650, 350));
+                                guestframe.pack();
+                                guestframe.setLocationRelativeTo(null);
+                                guestframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                guestframe.setVisible(true);
+                    });
 
-        
-        else {
-            newpanel.removeAll();
-            notfound.setText("The Guest " + firstName + " " + lastName + " is not found");
-            newpanel.add(notfound);
-            cancelButton.setPreferredSize(new Dimension(5, 5));
-            tryagainButton.setPreferredSize(new Dimension(5, 5));
-            newpanel.add(cancelButton);
-            newpanel.add(tryagainButton);
-            newframe.revalidate();
-            newframe.repaint();
+                     buttons[3].addActionListener(o -> {
+                        buttonpanel.removeAll();
+                        buttonpanel.add(submitButtons[3]);
+                        buttonpanel.add(cancelButton);
+                        fpanel.removeAll();
+                        fpanel.setLayout(new GridLayout(0, 1, 10, 10));// change it back after an item is changed
+                        fpanel.add(pquestion);
+                        fpanel.add(phonenum);
+                        fpanel.add(buttonpanel);
+
+                        submitButtons[3].addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                fpanel.removeAll();
+                                buttonpanel.removeAll();
+                                fpanel.setLayout(new GridLayout(0, 1, 10, 10));
+                                String newnum = phonenum.getText();
+                                guest.setPhoneNumber(newnum);
+                                result_messasge.setText("Guest Phone Number has been Updated");
+                                fpanel.add(result_messasge);
+                                okaybutton.setPreferredSize(new Dimension(80, 40));
+                                buttonpanel.add(okaybutton);
+                                fpanel.add(buttonpanel);
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                            }
+                        });
+                                buttonpanel.revalidate();
+                                buttonpanel.repaint();
+                                fpanel.revalidate();
+                                fpanel.repaint();
+                                guestframe.add(fpanel);
+                                guestframe.setPreferredSize(new Dimension(650, 350));
+                                guestframe.pack();
+                                guestframe.setLocationRelativeTo(null);
+                                guestframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                guestframe.setVisible(true);
+                    });
+
+                    buttons[4].addActionListener(o -> {
+                        try {
+                            newframe.dispose();
+                            initialMenu();
+                        } catch (ParseException p) {
+                            p.printStackTrace();
+                        }
+                    });
+
+                    buttons[5].addActionListener(o -> {
+                        frame.dispose();
+                        newframe.dispose();
+                        System.exit(0);
+                    });
+
+                    frame.revalidate();
+                    frame.repaint();
+                } else {
+                    newpanel.removeAll();
+                    newpanel.setSize(500, 300);
+                    newpanel.setLayout(new BoxLayout(newpanel, BoxLayout.Y_AXIS));
+                    notfound.setText("The Employee " + firstName + " " + lastName + " is not found");
+                    newpanel.add(notfound);
+                    tryagainButton.setAlignmentX(Component.CENTER_ALIGNMENT);//center the buttons after the textArea for a better look
+                    cancelButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                    newpanel.add(tryagainButton);              
+                    newpanel.add(cancelButton);
+                    newframe.revalidate();
+                    newframe.repaint();
         }   }
 
             }});
             okaybutton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
+                                guestframe.dispose();
                                 firstnameframe.dispose();
                                 newframe.dispose();
                          } });
@@ -1922,17 +2287,100 @@ public class Menu extends JFrame {
     }
 
     public void option3_5() throws ParseException {
-        Scanner in = new Scanner(System.in);
-        System.out.print("Enter the Guest last name: ");
-        String lastName = in.nextLine();
-        System.out.print("Enter the Guest first name: ");
-        String firstName = in.nextLine();
+    JFrame newframe = new JFrame("Deleting Guest");
+    JPanel fpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+    JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10));
+    JPanel buttonpanel = new JPanel(new FlowLayout(FlowLayout.CENTER));// new panel for a better layout
+    newframe.setSize(500, 300);
+
+    String[] Labels = {"Enter the Employee last name: ", "Enter the Employee first name: "};
+    JLabel[] questions = new JLabel[Labels.length];
+    JTextField[] answerFields = new JTextField[questions.length];
+    
+    JButton submitButton = new JButton("Submit");
+    JButton cancelButton = new JButton("Cancel");
+    JButton okaybutton = new JButton("OK");
+    JButton tryAgainbutton = new JButton("Try Again");
+    JTextArea notfound = new JTextArea();
+
+    for (int i = 0; i < questions.length; i++) {
+        JLabel label = new JLabel(Labels[i]);
+        newpanel.add(label);
+        answerFields[i] = new JTextField();
+        answerFields[i].setFont(new Font("Arial", Font.PLAIN, 20));
+        newpanel.add(answerFields[i]);
+        label.setFont(new Font("Arial", Font.PLAIN, 20));
+        submitButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        cancelButton.setFont(new Font("Arial", Font.PLAIN, 20));
+        okaybutton.setFont(new Font("Arial", Font.PLAIN, 20));
+        tryAgainbutton.setFont(new Font("Arial", Font.PLAIN, 20));
+        notfound.setFont(new Font("Arial", Font.PLAIN, 20));
+    }
+    buttonpanel.add(submitButton);
+    buttonpanel.add(cancelButton);
+    newpanel.add(buttonpanel);
+
+    submitButton.addActionListener(new ActionListener() {
+        
+        public void actionPerformed(ActionEvent e) {
+            String lastName = answerFields[0].getText();
+            String firstName = answerFields[1].getText();
+            newpanel.removeAll();
+            boolean found = false;
         for(int i = 0; i < guests.size(); i++) {
+            newpanel.setLayout(new BoxLayout(newpanel, BoxLayout.Y_AXIS));
             if(Objects.equals(lastName, guests.get(i).getLastName()) && Objects.equals(firstName, guests.get(i).getFirstName())) {
-                guests.remove(i);
-            }
+            guests.remove(i);
+            buttonpanel.removeAll();
+            found = true;
+            notfound.setText("Guest has been deleted ");
+            newpanel.add(notfound);
+            buttonpanel.add(okaybutton);
+            newpanel.add(buttonpanel);
+            }if(!found){ 
+            notfound.setText("Guest not found ");
+            buttonpanel.removeAll();
+            newpanel.add(notfound);
+            buttonpanel.add(tryAgainbutton);
+            buttonpanel.add(cancelButton);
+            newpanel.add(buttonpanel);
+             } 
+            buttonpanel.revalidate();
+            buttonpanel.repaint();
+            newpanel.revalidate();
+            newpanel.repaint(); 
+     } }});
+     okaybutton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            newframe.dispose();
+                try {
+                    option3_5();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }            
         }
-        initialMenu();
+    });
+    tryAgainbutton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            newframe.dispose();
+                try {
+                    option3_5();
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }            
+        }
+    });
+    cancelButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            newframe.dispose();
+        }
+    });
+    newframe.add(newpanel);
+    newframe.setPreferredSize(new Dimension(650, 350));
+    newframe.pack();
+    newframe.setLocationRelativeTo(null);
+    newframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    newframe.setVisible(true);
     }
     public void option3_6() throws ParseException {
         Scanner in = new Scanner(System.in);
@@ -2223,7 +2671,7 @@ public void option6_3() throws ParseException {
     scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
     // Setting the front size and style
-    textArea.setFont(new Font("Arial", Font.PLAIN, 19));
+    textArea.setFont(new Font("Arial", Font.PLAIN, 20));
 
     
     panel.add(scrollPane); 
@@ -2701,41 +3149,57 @@ public void option6_4() throws ParseException {
 
     public void option7_1() throws ParseException {
         frame.dispose();
-        JFrame newFrame = new JFrame("Search Invoice");
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        JPanel inputPanel = new JPanel();
-        JPanel buttonPanel = new JPanel();
-        newFrame.setSize(750, 450);
     
-        JTextField lastNameField = new JTextField(10);
-        JTextField firstNameField = new JTextField(10);
+        JFrame newFrame = new JFrame("Invoice Search");
+        JPanel newpanel = new JPanel(new GridLayout(0, 2, 10, 10)); // GridLayout
+        newFrame.setSize(1500, 300);
+        JFrame window = new JFrame("Invoice Results");
+        JPanel wood = new JPanel();
+        window.setSize(800, 300); 
+        JTextField lastNameField = new JTextField(20);
+        JTextField firstNameField = new JTextField(20);
         JButton submitButton = new JButton("Submit");
-        JButton cancelButton = new JButton("Cancel");
-        JButton okayButton = new JButton("Ok");
+        JButton okayButton = new JButton("OK");
         JButton tryagainButton = new JButton("Try Again");
+        JButton cancelButton = new JButton("Cancel");
+        JTextArea message = new JTextArea();
     
-        JTextArea outputTextArea = new JTextArea();
-        outputTextArea.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(outputTextArea);
+        Font labelFont = new Font("Arial", Font.PLAIN, 15);
+        Font textFieldFont = new Font("Arial", Font.PLAIN, 20);
     
-        inputPanel.add(new JLabel("Enter the Guest first Name: "));
-        inputPanel.add(firstNameField);
-        inputPanel.add(new JLabel("Enter the Guest last name: "));
-        inputPanel.add(lastNameField);
-        inputPanel.add(new JLabel(""));
-        inputPanel.add(submitButton);
-        inputPanel.add(cancelButton);
+        JLabel lastNameLabel = new JLabel("Enter the Guest last name:");
+        lastNameLabel.setFont(labelFont);
+        message.setFont(textFieldFont);
+        newpanel.add(lastNameLabel);
+        message.setEditable(false);
+        lastNameField.setFont(textFieldFont);
+        newpanel.add(lastNameField);
     
-        mainPanel.add(inputPanel, BorderLayout.NORTH);
+        JLabel firstNameLabel = new JLabel("Enter the Guest first name:");
+        firstNameLabel.setFont(labelFont);
+        newpanel.add(firstNameLabel);
     
-        JPanel titlePanel = new JPanel(); // New JPanel for the title
+        firstNameField.setFont(textFieldFont);
+        newpanel.add(firstNameField);
+    
         JTextArea title = new JTextArea("\tFirst Name\tLast Name\tNights Stayed\tDiscount\tTotal \n\n");
         title.setEditable(false);
-        titlePanel.add(title);
+       
+        title.setBackground(Color.LIGHT_GRAY);
+        Font buttonFont = new Font("Arial", Font.PLAIN, 15);
+        title.setFont(labelFont);
+        submitButton.setFont(buttonFont);
+        newpanel.add(submitButton);
     
+        cancelButton.setFont(buttonFont);
+        newpanel.add(cancelButton);
+
+        okayButton.setFont(buttonFont);
+        tryagainButton.setFont(buttonFont);
+
         submitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mainPanel.removeAll();
+                newpanel.removeAll();
                 String lastName = lastNameField.getText();
                 String firstName = firstNameField.getText();
     
@@ -2744,55 +3208,83 @@ public void option6_4() throws ParseException {
                 for (Invoice invoice : invoices) {
                     if (Objects.equals(lastName, invoice.getCostumer().getLastName())
                             && Objects.equals(firstName, invoice.getCostumer().getFirstName())) {
-                        titlePanel.add(title);
-                        outputTextArea.append(invoice.printInvoice());
-                        exists = true;
-                        buttonPanel.add(okayButton);
+                                title.setAlignmentX(TOP_ALIGNMENT);
+                                message.append(invoice.printInvoice());
+                            newFrame.dispose();
+                            wood.add((title), BorderLayout.NORTH);
+                            okayButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                            wood.add(message);
+                            wood.add(okayButton, BorderLayout.SOUTH);
+                            exists = true;
+                            window.add(wood);
+                            window.setPreferredSize(new Dimension(1300, 450));
+                            window.pack();
+                            window.setLocationRelativeTo(null);
+                            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                            window.setVisible(true);                            
                     }
                 }
-    
                 if (!exists) {
-                    outputTextArea.setText("Invoice is not found for " + firstName + " " + lastName);
-                    buttonPanel.add(tryagainButton);
-                    buttonPanel.add(cancelButton);
+                    newFrame.dispose();
+                    message.setText("Invoice is not found for " + firstName + " " + lastName);
+                    tryagainButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+                    cancelButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+                    wood.add(message);
+                    wood.add(tryagainButton, BorderLayout.SOUTH);
+                    wood.add(cancelButton, BorderLayout.SOUTH);
+                    window.add(wood);
+                    window.setPreferredSize(new Dimension(400, 250));
+                    window.pack();
+                    window.setLocationRelativeTo(null);
+                    window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    window.setVisible(true); 
                 }
-    
-                ActionListener buttonListener = new ActionListener() {
+
+                tryagainButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        try {
+                            frame.dispose();
                             newFrame.dispose();
+                            window.dispose();
+                        try {
                             option7_1();
                         } catch (ParseException ex) {
                             ex.printStackTrace();
                         }
                     }
-                };
-    
-                okayButton.addActionListener(buttonListener);
-                tryagainButton.addActionListener(buttonListener);
-    
-                mainPanel.add(titlePanel, BorderLayout.NORTH);
-                mainPanel.add(scrollPane, BorderLayout.CENTER);
-                mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-    
-                mainPanel.validate();
-                mainPanel.repaint();
+                });
+                okayButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                newFrame.dispose();
+                window.dispose();
+                try {
+                            option7_1();
+                        } catch (ParseException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+        
+                newpanel.revalidate();
+                newpanel.repaint();
             }
         });
-    
+        
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                newFrame.dispose();
+                window.dispose();
                 try {
-                    newFrame.dispose();
                     initialMenu();
                 } catch (ParseException ex) {
                     ex.printStackTrace();
                 }
             }
         });
-    
-        newFrame.add(mainPanel);
-        newFrame.setPreferredSize(new Dimension(750, 450));
+
+        newFrame.add(newpanel);
+        newFrame.setPreferredSize(new Dimension(550, 350));
         newFrame.pack();
         newFrame.setLocationRelativeTo(null);
         newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

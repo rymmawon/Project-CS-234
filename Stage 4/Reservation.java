@@ -54,14 +54,21 @@ public class Reservation {
 
     public void setCheckOutDate() {
         JDialog dialog = new JDialog();
-        dialog.setTitle("Enter Check-out Date");
+        JTextArea title = new JTextArea("Enter Check-out Date");
+        JTextArea error = new JTextArea( "Invalid date format. Please enter in MM-dd-yyyy.");
+        JLabel enter = new JLabel("Enter check-out Date in MM-dd-yyyy:");
+        JButton okButton = new JButton("OK");
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.setFont(new Font("Arial", Font.BOLD, 20));
+        okButton.setFont(new Font("Arial", Font.BOLD, 20));
+        enter.setFont(new Font("Arial", Font.PLAIN, 20));
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        dialog.setTitle("Enter check-out Date in MM-dd-yyyy:");
         dialog.setLayout(new GridLayout(3, 2));
 
         JTextField checkOutField = new JTextField(20);
-        dialog.add(new JLabel("Enter check-out Date in MM-dd-yyyy:"));
+        dialog.add(enter);
         dialog.add(checkOutField);
-
-        JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -72,12 +79,10 @@ public class Reservation {
                     dialog.dispose();
                     calculateNights();
                 } catch (ParseException parseException) {
-                    JOptionPane.showMessageDialog(dialog, "Invalid date format. Please enter in MM-dd-yyyy.");
+                    JOptionPane.showMessageDialog(dialog,error);
                 }
             }
         });
-
-        JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,7 +94,7 @@ public class Reservation {
         dialog.add(okButton);
         dialog.add(cancelButton);
 
-        dialog.setSize(400, 150);
+        dialog.setSize(800, 300);
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
@@ -130,7 +135,9 @@ public class Reservation {
         frame.removeAll();
 
         JTextField nightsField = new JTextField(2);
-        frame.add(new JLabel("Enter the number of nights to stay (1-21):"));
+        JLabel title = new JLabel("\"Enter the number of nights to stay (1-21):\"");
+        frame.add(title);
+        title.setFont(new Font("Arial", Font.PLAIN, 30));
         frame.add(nightsField);
 
         JButton okButton = new JButton("OK");
@@ -180,15 +187,20 @@ public class Reservation {
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     
             JPanel panel = new JPanel();
+            JButton okButton = new JButton("Submit");
+            JButton cancelButton = new JButton("Cancel");
             panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
     
             JTextField checkInField = new JTextField(20);
-    
-            panel.add(new JLabel("Enter check-in Date in MM-dd-yyyy:"));
+            JLabel label = new JLabel("Enter the date in format MM-dd-yyyy: ");
+            label.setFont(new Font("Arial", Font.PLAIN, 17));
+            okButton.setFont(new Font("Arial", Font.BOLD, 20));
+            cancelButton.setFont(new Font("Arial", Font.BOLD, 20));
+            checkInField.setFont(new Font("Arial", Font.BOLD, 20));
+            panel.add(label);
             panel.add(checkInField);
     
-            JButton okButton = new JButton("OK");
-            JButton cancelButton = new JButton("Cancel");
+
     
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new FlowLayout());
@@ -203,13 +215,16 @@ public class Reservation {
     
                     JFrame newFrame = new JFrame("");
                     JPanel newpanel = new JPanel();
+                    JLabel added = new JLabel("Reservation has been added.");
                     newpanel.setLayout(new BoxLayout(newpanel, BoxLayout.Y_AXIS));
     
                     JButton okayButton = new JButton("OK");
+                    okayButton.setFont(new Font("Arial", Font.BOLD, 15));
+                    added.setFont(new Font("Arial", Font.PLAIN, 15));
 
                    okayButton.setBounds(10, 40, 80, 25);
     
-                    newpanel.add(new JLabel("Reservation has been added."));
+                    newpanel.add(added);
                     newpanel.getComponent(0).setBounds(10, 10, 650, 25); 
                     newpanel.add(okayButton);
     
@@ -218,7 +233,7 @@ public class Reservation {
                     });
     
                     newFrame.add(newpanel);
-                    newFrame.setSize(500, 150);
+                    newFrame.setSize(300, 150);
                     newFrame.setLocationRelativeTo(null);
                     newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                     newFrame.setVisible(true);
@@ -240,7 +255,7 @@ public class Reservation {
     
             frame.add(panel);
     
-            frame.setSize(300, 150);
+            frame.setSize(450, 250);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         });
