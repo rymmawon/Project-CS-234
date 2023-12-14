@@ -1,1 +1,4 @@
-
+Create GUI APPLication
+Create UML Diagram
+Create pdf presentation
+Create jar file
